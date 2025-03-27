@@ -25,3 +25,27 @@ Content-Type: application/json
   "email": "admin4@example.com",
   "password": "12345678"
 }
+
+### ✅ Onboarding - datos personales
+PUT http://localhost:3000/api/user/onboarding/personal
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTNlMDk4OTZkMTA2MTFmNjUyYTNlMyIsImVtYWlsIjoiYWRtaW4yQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQyOTg4MzYyLCJleHAiOjE3NDI5OTU1NjJ9.IhxFbh2RKGbFGmELMjOmgrH7kfPhb0BmfxViDTnO7Ek
+
+{
+  "name": "Alejandro",
+  "surname": "Ortiz",
+  "nif": "12345678A"
+}
+
+
+### PATCH - Compañía (empresa)
+PATCH http://localhost:3000/api/user/onboarding/company
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMDExNDQ5LCJleHAiOjE3NDMwMTg2NDl9.NvXTrsfHdb_8qxp2NghFLrcILbgjvHi9z1kVftqsV_Y
+
+{
+  "isFreelance": false,
+  "name": "Mi Empresa SL",
+  "cif": "B98765432",
+  "address": "Calle Falsa 123"
+}
