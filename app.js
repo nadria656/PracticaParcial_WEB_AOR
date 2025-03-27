@@ -3,13 +3,24 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const connectDB = require('./config/mongo');
+const userRoutes = require('./routes/userRoutes');
+
 
 dotenv.config();
 
 const app = express();
 
+
 // Conexión MongoDB
 connectDB();
+
+// Middlewares
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Rutas
+app.use('/api/user', userRoutes);
 
 // Arranque del servidor
 const PORT = process.env.PORT || 4000;

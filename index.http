@@ -1,0 +1,27 @@
+### Registro de usuario
+POST http://localhost:3000/api/user/register
+Content-Type: application/json
+
+{
+  "email": "admin4@example.com",
+  "password": "12345678"
+}
+
+###  Validación de email 
+PUT http://localhost:3000/api/user/validation
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMDExMzc3LCJleHAiOjE3NDMwMTg1Nzd9.X3KCpWT8CBCXT5eCjsu4OxwMTddrt1z-ds8iWZHjy60
+
+{
+  "code": "213056"
+}
+
+
+###  Login correcto
+POST http://localhost:3000/api/user/login
+Content-Type: application/json
+
+{
+  "email": "admin4@example.com",
+  "password": "12345678"
+}
