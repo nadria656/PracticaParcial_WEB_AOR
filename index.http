@@ -27,9 +27,9 @@ Content-Type: application/json
 }
 
 ### ✅ Onboarding - datos personales
-PUT http://localhost:3000/api/user/onboarding/personal
+PUT http://localhost:3000/api/onboarding/personal
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTNlMDk4OTZkMTA2MTFmNjUyYTNlMyIsImVtYWlsIjoiYWRtaW4yQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQyOTg4MzYyLCJleHAiOjE3NDI5OTU1NjJ9.IhxFbh2RKGbFGmELMjOmgrH7kfPhb0BmfxViDTnO7Ek
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMjUwMTM4LCJleHAiOjE3NDMyNTczMzh9.sUbJfH1-W2tPzxTMrORaStrRNDrx7_MKanGYQp5n3Lw
 
 {
   "name": "Alejandro",
@@ -39,9 +39,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTNlMDk4O
 
 
 ### PATCH - Compañía (empresa)
-PATCH http://localhost:3000/api/user/onboarding/company
+PATCH http://localhost:3000/api/onboarding/company
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMDExNDQ5LCJleHAiOjE3NDMwMTg2NDl9.NvXTrsfHdb_8qxp2NghFLrcILbgjvHi9z1kVftqsV_Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMjUwMTM4LCJleHAiOjE3NDMyNTczMzh9.sUbJfH1-W2tPzxTMrORaStrRNDrx7_MKanGYQp5n3Lw
 
 {
   "isFreelance": false,
