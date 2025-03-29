@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const onboardingRoutes = require('./routes/onBoardingRoutes');
 
 
+
 dotenv.config();
 
 const app = express();
@@ -20,10 +21,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // Rutas
 app.use('/api/user', userRoutes);
-
 app.use('/api/onboarding', onboardingRoutes);
+
+
+app.use('/uploads', express.static('uploads'));
 
 
 // Arranque del servidor

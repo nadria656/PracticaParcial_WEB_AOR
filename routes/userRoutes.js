@@ -3,6 +3,8 @@ const router = express.Router();
 const { body } = require('express-validator');
 const userController = require('../controllers/userController');
 const auth = require('../middleware/auth');
+const upload = require('../uploads/logoUpload');
+
 
 // 🔐 POST - Registro de usuario
 router.post('/register', [
@@ -24,21 +26,7 @@ router.post('/register', [
   ], userController.login);
 
   
-
-  // 👤 PUT - Onboarding (datos personales)
-router.put('/onboarding/personal', auth, [
-  body('name').notEmpty().withMessage('El nombre es obligatorio'),
-  body('surname').notEmpty().withMessage('Los apellidos son obligatorios'),
-  body('nif').notEmpty().withMessage('El NIF es obligatorio')
-], userController.onboardingPersonal);
+  router.patch('/logo', auth, upload.single('logo'), userController.uploadLogo);
 
 
-// 👤 PATCH  - Datos de la compañía
-router.patch('/onboarding/company', auth, [
-    body('isFreelance').isBoolean().withMessage('El campo isFreelance debe ser true o false'),
-    body('name').optional().isString().withMessage('Nombre inválido'),
-    body('cif').optional().isString().withMessage('CIF inválido'),
-    body('address').optional().isString().withMessage('Dirección inválida')
-  ], userController.onboardingCompany);
-  
   module.exports = router;
