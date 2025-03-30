@@ -28,5 +28,8 @@ router.post('/register', [
   
   router.patch('/logo', auth, upload.single('logo'), userController.uploadLogo);
 
+  // GET  Obtener datos del usuario autenticado
+  router.get('/me', auth, userController.getProfile);
+
 
   module.exports = router;

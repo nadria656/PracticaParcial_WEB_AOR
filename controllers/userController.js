@@ -137,3 +137,14 @@ exports.uploadLogo = async (req, res) => {
     res.status(500).json({ msg: 'Error al subir el logo', error });
   }
 };
+
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password -code -__v');
+    if (!user) return res.status(404).json({ msg: 'Usuario no encontrado' });
+
+    res.json(user);
+  } catch (error) {
+    res.status(500).json({ msg: 'Error del servidor', error });
+  }
+};
