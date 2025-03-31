@@ -168,3 +168,59 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ msg: 'Error al eliminar el usuario', error });
   }
 };
+
+exports.forgotPassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ msg: 'Usuario no encontrado' });
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+    user.resetCode = code;
+    user.resetCodeExpiration = new Date(Date.now() + 10 * 60 * 1000); // 10 minutos
+
+    await user.save();
+
+    // Aquí normalmente enviaríamos un correo (lo simulamos por ahora)
+    res.json({ msg: 'Código de recuperación generado', code }); // ⚠️ mostrar solo por ahora
+  } catch (error) {
+    res.status(500).json({ msg: 'Error en el servidor', error });
+  }
+};
+
+
+exports.resetPassword = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+  const { email, code, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user || user.resetCode !== code) {
+      return res.status(400).json({ msg: 'Código inválido o usuario no encontrado' });
+    }
+
+    if (user.resetCodeExpiration < new Date()) {
+      return res.status(400).json({ msg: 'El código ha expirado' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    user.resetCode = null;
+    user.resetCodeExpiration = null;
+
+    await user.save();
+
+    res.json({ msg: '✅ Contraseña actualizada correctamente' });
+  } catch (error) {
+    res.status(500).json({ msg: 'Error en el servidor', error });
+  }
+};

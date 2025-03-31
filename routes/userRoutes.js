@@ -33,4 +33,16 @@ router.post('/register', [
 
   router.delete('/', auth, userController.deleteUser);
 
+  // Solicitar recuperación
+router.post('/forgot-password', [
+  body('email').isEmail().withMessage('Email inválido')
+], userController.forgotPassword);
+
+// Reiniciar contraseña
+router.post('/reset-password', [
+  body('email').isEmail().withMessage('Email inválido'),
+  body('code').notEmpty().withMessage('Código requerido'),
+  body('newPassword').isLength({ min: 8 }).withMessage('La nueva contraseña debe tener mínimo 8 caracteres')
+], userController.resetPassword);
+
   module.exports = router;

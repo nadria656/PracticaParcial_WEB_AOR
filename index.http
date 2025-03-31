@@ -74,3 +74,23 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTNlMDk4O
 ### Hard delete (borrado real)
 DELETE http://localhost:3000/api/user?soft=false
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTNlMDk4OTZkMTA2MTFmNjUyYTNlMyIsImVtYWlsIjoiYWRtaW4yQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMDEwMjgxLCJleHAiOjE3NDMwMTc0ODF9.ASD8UlPm0HBK9eLziI9BHO_xSbfAN89l2NblLmlz-6E
+
+
+### Solicitar recuperación de contraseña
+POST http://localhost:3000/api/user/forgot-password
+Content-Type: application/json
+
+{
+  "email": "admin@example.com"
+}
+
+
+### Resetear contraseña (usa el código recibido)
+POST http://localhost:3000/api/user/reset-password
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "code": "920433",
+  "newPassword": "nuevaClave124"
+}
