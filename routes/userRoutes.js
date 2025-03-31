@@ -31,5 +31,6 @@ router.post('/register', [
   // GET  Obtener datos del usuario autenticado
   router.get('/me', auth, userController.getProfile);
 
+  router.delete('/', auth, userController.deleteUser);
 
   module.exports = router;

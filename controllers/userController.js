@@ -148,3 +148,23 @@ exports.getProfile = async (req, res) => {
     res.status(500).json({ msg: 'Error del servidor', error });
   }
 };
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const soft = req.query.soft !== 'false'; // por defecto es true
+
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ msg: 'Usuario no encontrado' });
+
+    if (soft) {
+      user.status = 'deleted';
+      await user.save();
+      return res.json({ msg: 'Usuario marcado como eliminado (soft delete)' });
+    } else {
+      await User.deleteOne({ _id: user._id });
+      return res.json({ msg: 'Usuario eliminado permanentemente (hard delete)' });
+    }
+  } catch (error) {
+    res.status(500).json({ msg: 'Error al eliminar el usuario', error });
+  }
+};
