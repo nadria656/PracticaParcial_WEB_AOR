@@ -45,4 +45,8 @@ router.post('/reset-password', [
   body('newPassword').isLength({ min: 8 }).withMessage('La nueva contraseña debe tener mínimo 8 caracteres')
 ], userController.resetPassword);
 
+router.post('/invite', auth, [
+  body('email').isEmail().withMessage('Email inválido')
+], userController.inviteUser);
+
   module.exports = router;

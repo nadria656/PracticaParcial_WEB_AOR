@@ -94,3 +94,30 @@ Content-Type: application/json
   "code": "920433",
   "newPassword": "nuevaClave124"
 }
+
+### ✅ Invitar usuario como guest
+POST http://localhost:3000/api/user/invite
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDE4NjgwLCJleHAiOjE3NDM0MjU4ODB9.XU6FFM_T325FHjNBrer0qUzcGM38QpjTX5qtpd6ObRk
+
+{
+  "email": "compañero5@example.com"
+}
+
+### 🔐 Login del usuario invitado
+POST http://localhost:3000/api/user/login
+Content-Type: application/json
+
+{
+  "email": "compañero5@example.com",
+  "password": "b15rq4eo"
+}
+
+### ✅ Validar código del invitado
+PUT http://localhost:3000/api/user/validation
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3NTdhODVkZDE1ZDhjODJhYThjZiIsImVtYWlsIjoiY29tcGHDsWVybzVAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDM0MTg3NDYsImV4cCI6MTc0MzQyNTk0Nn0.y5P91cetzbZe4pA_Qf_2Ta_xAo6fjPfdgKKP8encME8
+
+{
+  "code": "374923"
+}

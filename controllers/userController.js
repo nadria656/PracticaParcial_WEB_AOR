@@ -224,3 +224,52 @@ exports.resetPassword = async (req, res) => {
     res.status(500).json({ msg: 'Error en el servidor', error });
   }
 };
+
+exports.inviteUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+
+  const { email } = req.body;
+
+  try {
+    const inviter = await User.findById(req.user.id);
+    if (!inviter) return res.status(404).json({ msg: 'Usuario invitador no encontrado' });
+
+    if (!inviter.company || !inviter.company.name) {
+      return res.status(400).json({ msg: 'No puedes invitar si no tienes una compañía asociada' });
+    }
+
+    const existing = await User.findOne({ email });
+    if (existing) return res.status(409).json({ msg: 'Ese email ya está registrado' });
+
+    const tempPassword = Math.random().toString(36).slice(-8); // ejemplo: "k3r1p9v2"
+    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const invitedUser = new User({
+      email,
+      password: hashedPassword,
+      role: 'guest',
+      status: 'pending',
+      code,
+      company: inviter.company
+    });
+
+    await invitedUser.save();
+
+    const token = jwt.sign({ id: invitedUser._id, email: invitedUser.email }, process.env.JWT_SECRET, {
+      expiresIn: '2h'
+    });
+
+    res.status(201).json({
+      msg: '✅ Usuario invitado correctamente',
+      tempPassword,
+      code,
+      email,
+      token
+    });
+
+  } catch (error) {
+    res.status(500).json({ msg: 'Error al invitar al usuario', error });
+  }
+};
