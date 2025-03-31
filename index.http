@@ -3,17 +3,17 @@ POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-  "email": "admin4@example.com",
+  "email": "admin7@example.com",
   "password": "12345678"
 }
 
 ###  Validación de email 
 PUT http://localhost:3000/api/user/validation
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMDExMzc3LCJleHAiOjE3NDMwMTg1Nzd9.X3KCpWT8CBCXT5eCjsu4OxwMTddrt1z-ds8iWZHjy60
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDE5NjE5LCJleHAiOjE3NDM0MjY4MTl9.GBqsx0BztmTuVOBMbIbgLpOdeliQxRA4m0uznXR69eY
 
 {
-  "code": "213056"
+  "code": "683838"
 }
 
 
@@ -22,14 +22,14 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-  "email": "admin4@example.com",
+  "email": "admin7@example.com",
   "password": "12345678"
 }
 
 ### ✅ Onboarding - datos personales
 PUT http://localhost:3000/api/onboarding/personal
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMjUwMTM4LCJleHAiOjE3NDMyNTczMzh9.sUbJfH1-W2tPzxTMrORaStrRNDrx7_MKanGYQp5n3Lw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDE5NzMxLCJleHAiOjE3NDM0MjY5MzF9.YSBVCbkM5Y7XZqLZp6yk85lPhHWnSatO9IQ-n3Da9Ps
 
 {
   "name": "Alejandro",
@@ -41,7 +41,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxN
 ### PATCH - Compañía (empresa)
 PATCH http://localhost:3000/api/onboarding/company
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMjUwMTM4LCJleHAiOjE3NDMyNTczMzh9.sUbJfH1-W2tPzxTMrORaStrRNDrx7_MKanGYQp5n3Lw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDE5NzMxLCJleHAiOjE3NDM0MjY5MzF9.YSBVCbkM5Y7XZqLZp6yk85lPhHWnSatO9IQ-n3Da9Ps
 
 {
   "isFreelance": false,
@@ -53,7 +53,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxN
 
 ### PATCH - Logo de la empresa
 PATCH http://localhost:3000/api/user/logo
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMjUyMDI4LCJleHAiOjE3NDMyNTkyMjh9.udglu4u8_fUjs3RIl39jQbuHAR2ym7aXXhUTD27E1Os
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDE5NzMxLCJleHAiOjE3NDM0MjY5MzF9.YSBVCbkM5Y7XZqLZp6yk85lPhHWnSatO9IQ-n3Da9Ps
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -65,16 +65,14 @@ Content-Type: image/png
 
 ### ✅ Obtener perfil actual
 GET http://localhost:3000/api/user/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMzM5OTI1LCJleHAiOjE3NDMzNDcxMjV9.xpSmxPqP170jXrSYKgkg_-QBXUfQZkjvDUT4sekilwc
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDIwMDgzLCJleHAiOjE3NDM0MjcyODN9.8pCEr-ysEvwVQ12U2IQFaqASkj6kY5ZJ1RxN9pmJSX4
 ### Soft delete (status = deleted)
 DELETE http://localhost:3000/api/user
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTNlMDk4OTZkMTA2MTFmNjUyYTNlMyIsImVtYWlsIjoiYWRtaW4yQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMDEwMjgxLCJleHAiOjE3NDMwMTc0ODF9.ASD8UlPm0HBK9eLziI9BHO_xSbfAN89l2NblLmlz-6E
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDIwMDgzLCJleHAiOjE3NDM0MjcyODN9.8pCEr-ysEvwVQ12U2IQFaqASkj6kY5ZJ1RxN9pmJSX4
 
 ### Hard delete (borrado real)
 DELETE http://localhost:3000/api/user?soft=false
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTNlMDk4OTZkMTA2MTFmNjUyYTNlMyIsImVtYWlsIjoiYWRtaW4yQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzMDEwMjgxLCJleHAiOjE3NDMwMTc0ODF9.ASD8UlPm0HBK9eLziI9BHO_xSbfAN89l2NblLmlz-6E
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDIwMDgzLCJleHAiOjE3NDM0MjcyODN9.8pCEr-ysEvwVQ12U2IQFaqASkj6kY5ZJ1RxN9pmJSX4
 
 ### Solicitar recuperación de contraseña
 POST http://localhost:3000/api/user/forgot-password
@@ -91,17 +89,17 @@ Content-Type: application/json
 
 {
   "email": "admin@example.com",
-  "code": "920433",
+  "code": "666245",
   "newPassword": "nuevaClave124"
 }
 
 ### ✅ Invitar usuario como guest
 POST http://localhost:3000/api/user/invite
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZTQzZTMxNDJhODE3MTdjZWYyZjg0OCIsImVtYWlsIjoiYWRtaW40QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDE4NjgwLCJleHAiOjE3NDM0MjU4ODB9.XU6FFM_T325FHjNBrer0qUzcGM38QpjTX5qtpd6ObRk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDIwMDExLCJleHAiOjE3NDM0MjcyMTF9.n2jtMzin36R9kLT3Lbc7lw3r7kxqKrZcZVm9-gw2mhc
 
 {
-  "email": "compañero5@example.com"
+  "email": "compañero6@example.com"
 }
 
 ### 🔐 Login del usuario invitado
@@ -109,15 +107,15 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-  "email": "compañero5@example.com",
-  "password": "b15rq4eo"
+  "email": "compañero6@example.com",
+  "password": "d7i6ea0s"
 }
 
 ### ✅ Validar código del invitado
 PUT http://localhost:3000/api/user/validation
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3NTdhODVkZDE1ZDhjODJhYThjZiIsImVtYWlsIjoiY29tcGHDsWVybzVAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDM0MTg3NDYsImV4cCI6MTc0MzQyNTk0Nn0.y5P91cetzbZe4pA_Qf_2Ta_xAo6fjPfdgKKP8encME8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDM0MjAwMzUsImV4cCI6MTc0MzQyNzIzNX0.BkffsxkRDDclSGRHHzK2691ltCllxRFrjIpmtGpKN5s
 
 {
-  "code": "374923"
+  "code": "717924"
 }
