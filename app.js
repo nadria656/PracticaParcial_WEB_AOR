@@ -5,6 +5,9 @@ const cors = require('cors');
 const connectDB = require('./config/mongo');
 const userRoutes = require('./routes/userRoutes');
 const onboardingRoutes = require('./routes/onBoardingRoutes');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./docs/swaggerConfig');
+
 
 
 
@@ -25,6 +28,9 @@ app.use(express.urlencoded({ extended: true }));
 // Rutas
 app.use('/api/user', userRoutes);
 app.use('/api/onboarding', onboardingRoutes);
+
+
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 
 app.use('/uploads', express.static('uploads'));
