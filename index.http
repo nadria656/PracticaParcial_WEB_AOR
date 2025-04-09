@@ -3,17 +3,17 @@ POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-  "email": "admin7@example.com",
+  "email": "admin8@example.com",
   "password": "12345678"
 }
 
 ###  Validación de email 
 PUT http://localhost:3000/api/user/validation
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDE5NjE5LCJleHAiOjE3NDM0MjY4MTl9.GBqsx0BztmTuVOBMbIbgLpOdeliQxRA4m0uznXR69eY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MTk5NjIwLCJleHAiOjE3NDQyMDY4MjB9.7BdkMDtlGPLiskf-t-wqlQGy7uAOVkuHCkNjX42X5YQ
 
 {
-  "code": "683838"
+  "code": "689962"
 }
 
 
@@ -22,7 +22,7 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-  "email": "admin7@example.com",
+  "email": "admin8@example.com",
   "password": "12345678"
 }
 
@@ -119,3 +119,33 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzN
 {
   "code": "717924"
 }
+
+
+### Crear cliente
+POST http://localhost:3000/api/client
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MTk5NzcyLCJleHAiOjE3NDQyMDY5NzJ9.Hb4IVxamuFL90MZocbfB1ofTI4eis2cx8zKb9r2SqJc
+Content-Type: application/json
+
+{
+  "nombre": "Ferretería El Gitano",
+  "cif": "B12345678",
+  "direccion": {
+    "calle": "Calle del Flamenco 7",
+    "ciudad": "Triana",
+    "codigoPostal": "41010",
+    "pais": "España"
+  }
+}
+
+### Listar clientes
+GET http://localhost:3000/api/client
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MjAwODcyLCJleHAiOjE3NDQyMDgwNzJ9.f1EKS3DFi7GSS4myiEoevze3ltR479hn5Zd0Ui8381g
+
+### Obtener un cliente concreto
+GET http://localhost:3000/api/client/67f6606c19ab8d96faba2d0f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MjAwODcyLCJleHAiOjE3NDQyMDgwNzJ9.f1EKS3DFi7GSS4myiEoevze3ltR479hn5Zd0Ui8381g
+
+
+### Archivar cliente
+PATCH http://localhost:3000/api/client/archive/67f6606c19ab8d96faba2d0f
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MjAxNDA1LCJleHAiOjE3NDQyMDg2MDV9.2ZYSYuFLoyJ94qr7gzn0BT5JNY_CBYf3KSp_VBibJlM

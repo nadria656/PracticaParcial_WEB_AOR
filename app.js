@@ -7,6 +7,7 @@ const userRoutes = require('./routes/userRoutes');
 const onboardingRoutes = require('./routes/onBoardingRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./docs/swaggerConfig');
+const clientRoutes = require('./routes/clientRoutes'); 
 
 
 
@@ -28,6 +29,9 @@ app.use(express.urlencoded({ extended: true }));
 // Rutas
 app.use('/api/user', userRoutes);
 app.use('/api/onboarding', onboardingRoutes);
+app.use('/api/client', clientRoutes); 
+
+
 
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
