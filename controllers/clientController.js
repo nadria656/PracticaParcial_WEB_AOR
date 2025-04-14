@@ -108,6 +108,73 @@ const obtenerClientePorId = async (req, res, next) => {
       next(error);
     }
   };
+
+  const eliminarCliente = async (req, res, next) => {
+    try {
+      const clienteId = req.params.id;
+      const softDelete = req.query.soft !== 'false'; // por defecto true
+      const usuarioId = req.user.id;
+      const companiaId = req.user.company || null;
+  
+      const cliente = await Cliente.findOne({
+        _id: clienteId,
+        eliminado: false,
+        $or: [
+          { usuario: usuarioId },
+          { compania: companiaId }
+        ]
+      });
+  
+      if (!cliente) {
+        return res.status(404).json({ mensaje: 'Cliente no encontrado o sin permisos para eliminarlo' });
+      }
+  
+      if (softDelete) {
+        cliente.archivado = true;
+        await cliente.save();
+        return res.json({ mensaje: 'Cliente archivado (soft delete)' });
+      } else {
+        cliente.eliminado = true;
+        await cliente.save();
+        return res.json({ mensaje: 'Cliente eliminado definitivamente (hard delete)' });
+      }
+  
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  const recuperarCliente = async (req, res, next) => {
+    try {
+      const clienteId = req.params.id;
+      const usuarioId = req.user.id;
+      const companiaId = req.user.company || null;
+  
+      const cliente = await Cliente.findOneAndUpdate(
+        {
+          _id: clienteId,
+          eliminado: false,
+          archivado: true,
+          $or: [
+            { usuario: usuarioId },
+            { compania: companiaId }
+          ]
+        },
+        { archivado: false },
+        { new: true }
+      );
+  
+      if (!cliente) {
+        return res.status(404).json({ mensaje: 'Cliente no encontrado o no está archivado' });
+      }
+  
+      res.json({ mensaje: 'Cliente recuperado correctamente', cliente });
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+  
   
 
   module.exports = {
@@ -115,4 +182,6 @@ const obtenerClientePorId = async (req, res, next) => {
     obtenerClientes,
     obtenerClientePorId,
     archivarCliente,
+    eliminarCliente,
+    recuperarCliente,
   };
