@@ -7,6 +7,7 @@ const onboardingRoutes = require('./routes/onBoardingRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./docs/swaggerConfig');
 const clientRoutes = require('./routes/clientRoutes'); 
+const projectRoutes = require('./routes/projectRoutes');
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/user', userRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/client', clientRoutes); 
+app.use('/api/project', projectRoutes);
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static('uploads'));

@@ -124,7 +124,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzN
 ### Crear cliente
 POST http://localhost:3000/api/client
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MjgyNDE1LCJleHAiOjE3NDQyODk2MTV9.RDpLr85V7jMrVTqPO1EDpEIdGhhqi6EhV5RpwdPEw48
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0NjIxOTM1LCJleHAiOjE3NDQ2MjkxMzV9.e43Lz3pLt4JIiBuGY5PHyy898z5DJLttfHqco6Ck-eQ
 
 {
   "nombre": "Ferretería El Gitano",
@@ -140,7 +140,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0M
 
 ### Listar clientes
 GET http://localhost:3000/api/client
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MjgzNzg5LCJleHAiOjE3NDQyOTA5ODl9.NmR9IrW_0i7NC4hTehRcFvMu0BYUVrTlAKNoBdHPtZ8
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0NjIxOTM1LCJleHAiOjE3NDQ2MjkxMzV9.e43Lz3pLt4JIiBuGY5PHyy898z5DJLttfHqco6Ck-eQ
 ### Obtener un cliente concreto
 GET http://localhost:3000/api/client/67f7b6ae066ff839ebbc3313
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MjgzNzIwLCJleHAiOjE3NDQyOTA5MjB9.HZEhrAJAKGqVKRHAQm_f_erQhYcUuwPRwpid9SaIcaw
@@ -162,3 +162,50 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0M
 ### Recuperar cliente archivado
 PATCH http://localhost:3000/api/client/recover/67f7b6ae066ff839ebbc3313
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MjgzNzg5LCJleHAiOjE3NDQyOTA5ODl9.NmR9IrW_0i7NC4hTehRcFvMu0BYUVrTlAKNoBdHPtZ8
+
+
+### Crear Proyecto
+POST http://localhost:3000/api/project
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0NjIxOTM1LCJleHAiOjE3NDQ2MjkxMzV9.e43Lz3pLt4JIiBuGY5PHyy898z5DJLttfHqco6Ck-eQ
+Content-Type: application/json
+
+{
+  "nombre": "Proyecto Gitano",
+  "descripcion": "Proyecto para crear un simulador de gitano",
+  "cliente": "67fcd18f6e1cdb533feedc28" 
+}
+
+
+### Actualizar Proyecto
+PUT http://localhost:3000/api/project/67fcd4b22ff4575617b40762  
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0NjIxOTM1LCJleHAiOjE3NDQ2MjkxMzV9.e43Lz3pLt4JIiBuGY5PHyy898z5DJLttfHqco6Ck-eQ
+Content-Type: application/json
+
+{
+  "nombre": "Proyecto Gitano Mejorado",
+  "descripcion": "Proyecto mejorado para crear un simulador de gitano",
+  "cliente": "67fcd18f6e1cdb533feedc28"
+}
+
+
+### Listar Proyectos
+GET http://localhost:3000/api/project
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0NjIxOTM1LCJleHAiOjE3NDQ2MjkxMzV9.e43Lz3pLt4JIiBuGY5PHyy898z5DJLttfHqco6Ck-eQ
+Content-Type: application/json
+
+
+### Obtener Proyecto por ID
+GET http://localhost:3000/api/project/67fcd1b06e1cdb533feedc2d  
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0NjIxOTM1LCJleHAiOjE3NDQ2MjkxMzV9.e43Lz3pLt4JIiBuGY5PHyy898z5DJLttfHqco6Ck-eQ
+Content-Type: application/json
+
+### Archivar un Proyecto (Soft Delete)
+DELETE http://localhost:3000/api/project/67fcd1b06e1cdb533feedc2d
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0NjIxOTM1LCJleHAiOjE3NDQ2MjkxMzV9.e43Lz3pLt4JIiBuGY5PHyy898z5DJLttfHqco6Ck-eQ
+Content-Type: application/json
+
+### Eliminar un Proyecto (Hard Delete)
+DELETE http://localhost:3000/api/project/67fcd1b06e1cdb533feedc2d?soft=false  
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0NjIxOTM1LCJleHAiOjE3NDQ2MjkxMzV9.e43Lz3pLt4JIiBuGY5PHyy898z5DJLttfHqco6Ck-eQ
+Content-Type: application/json
+
