@@ -30,10 +30,12 @@ app.use('/api/project', projectRoutes);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static('uploads'));
 
+// Determinamos el puerto según el entorno (si es test, usamos otro puerto)
+const PORT = process.env.PORT || (process.env.NODE_ENV === 'test' ? 4001 : 3000);
+
 // El servidor no se inicia aquí
- const PORT = process.env.PORT || 4000;
- app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
- });
+});
 
 module.exports = app;  // Exportamos la app para usarla en los tests

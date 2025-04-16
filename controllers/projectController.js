@@ -53,15 +53,25 @@ const actualizarProyecto = async (req, res, next) => {
 const listarProyectos = async (req, res, next) => {
   try {
     const usuarioId = req.user.id;
+
+    // Buscamos los proyectos que no están eliminados
     const proyectos = await Project.find({
       $or: [{ usuario: usuarioId }, { compania: req.user.company }],
       eliminado: false
     });
+
+    // Si no hay proyectos
+    if (proyectos.length === 0) {
+      return res.status(404).json({ mensaje: 'No hay proyectos disponibles' });
+    }
+
+    // Si encontramos proyectos, los devolvemos
     res.json(proyectos);
   } catch (error) {
-    next(error);
+    next(error);  // Manejamos cualquier error
   }
 };
+
 
 // Obtener un proyecto por ID
 const obtenerProyectoPorId = async (req, res, next) => {
@@ -102,10 +112,65 @@ const eliminarProyecto = async (req, res, next) => {
   }
 };
 
+// Recuperar un proyecto archivado (pasarlo a no borrado)
+const recuperarProyectoArchivado = async (req, res, next) => {
+  try {
+    const proyectoId = req.params.id;
+
+    // Buscar el proyecto archivado
+    const proyecto = await Project.findOne({
+      _id: proyectoId,
+      archivado: true,  // Solo buscamos proyectos archivados
+      eliminado: false
+    });
+
+    if (!proyecto) {
+      return res.status(404).json({ mensaje: 'Proyecto no encontrado o no está archivado' });
+    }
+
+    // Recuperar el proyecto (marcar como no archivado)
+    proyecto.archivado = false;
+    await proyecto.save();
+
+    res.json({
+      mensaje: 'Proyecto recuperado correctamente',
+      proyecto
+    });
+  } catch (error) {
+    next(error);  // Manejamos el error
+  }
+};
+
+// Listar proyectos archivados
+const listarProyectosArchivados = async (req, res, next) => {
+  try {
+    const usuarioId = req.user.id;
+
+    // Buscamos los proyectos archivados
+    const proyectos = await Project.find({
+      $or: [{ usuario: usuarioId }, { compania: req.user.company }],
+      archivado: true,
+      eliminado: false
+    });
+
+    // Si no hay proyectos archivados
+    if (proyectos.length === 0) {
+      return res.status(404).json({ mensaje: 'No hay proyectos archivados' });
+    }
+
+    // Si encontramos proyectos archivados, los devolvemos
+    res.json(proyectos);
+  } catch (error) {
+    next(error);  // Si ocurre un error, lo manejamos
+  }
+};
+
 module.exports = {
   crearProyecto,
   actualizarProyecto,
   listarProyectos,
   obtenerProyectoPorId,
-  eliminarProyecto
+  eliminarProyecto,
+  recuperarProyectoArchivado,
+  listarProyectosArchivados
 };

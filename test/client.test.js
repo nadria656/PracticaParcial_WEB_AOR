@@ -101,4 +101,109 @@ describe('Clientes', () => {
     expect(res.status).toBe(200);
     expect(res.body.mensaje).toBe('Cliente eliminado definitivamente (hard delete)');
   });
+
+  // Test para crear un proyecto
+    it('should create a project', async () => {
+      const clienteId = new ObjectId();
+      const companiaId = new ObjectId();
+  
+      const res = await request(app)
+        .post('/api/project')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          nombre: 'Proyecto Gitano',
+          descripcion: 'Proyecto para crear un simulador de gitano',
+          cliente: clienteId,
+          compania: companiaId
+        });
+  
+      expect(res.status).toBe(201);
+      expect(res.body).toHaveProperty('nombre', 'Proyecto Gitano');
+      expect(res.body).toHaveProperty('descripcion', 'Proyecto para crear un simulador de gitano');
+      proyectoId = res.body._id;
+    });
+  
+    // Test para actualizar un proyecto
+    it('should update a project', async () => {
+      const res = await request(app)
+        .put(`/api/project/${proyectoId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+          descripcion: 'Proyecto actualizado para crear un simulador mejorado'
+        });
+  
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('descripcion', 'Proyecto actualizado para crear un simulador mejorado');
+    });
+  
+    // Test para listar todos los proyectos
+    it('should list all projects', async () => {
+      const res = await request(app)
+        .get('/api/project')
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(res.status).toBe(200);
+      expect(res.body).toBeInstanceOf(Array);
+      expect(res.body[0]).toHaveProperty('nombre');
+    });
+  
+    // Test para obtener un proyecto por ID
+    it('should get a project by ID', async () => {
+      const res = await request(app)
+        .get(`/api/project/${proyectoId}`)
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty('_id', proyectoId.toString());
+    });
+  
+    // Test para eliminar un proyecto (soft delete)
+    it('should archive a project (soft delete)', async () => {
+      const res = await request(app)
+        .delete(`/api/project/${proyectoId}?soft=true`)
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(res.status).toBe(200);
+      expect(res.body.mensaje).toBe('Proyecto archivado correctamente');
+      expect(res.body.proyecto.archivado).toBe(true);
+    });
+  
+    // Test para listar proyectos archivados
+    it('should list all archived projects', async () => {
+      const res = await request(app)
+        .get('/api/project/archived')
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(res.status).toBe(200);
+      expect(res.body).toBeInstanceOf(Array);
+      expect(res.body[0]).toHaveProperty('nombre');
+    });
+    
+    // Test para recuperar un proyecto archivado
+    it('should recover an archived project (soft delete)', async () => {
+      // Primero, archivamos el proyecto
+      await request(app)
+        .delete(`/api/project/${proyectoId}?soft=true`)
+        .set('Authorization', `Bearer ${token}`);
+  
+      const res = await request(app)
+        .patch(`/api/project/recover/${proyectoId}`)
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(res.status).toBe(200);
+      expect(res.body.mensaje).toBe('Proyecto recuperado correctamente');
+      expect(res.body.proyecto.archivado).toBe(false);
+    });
+  
+    
+  
+    // Test para eliminar un proyecto (hard delete)
+    it('should delete a project (hard delete)', async () => {
+      const res = await request(app)
+        .delete(`/api/project/${proyectoId}?soft=false`)
+        .set('Authorization', `Bearer ${token}`);
+  
+      expect(res.status).toBe(200);
+      expect(res.body.mensaje).toBe('Proyecto eliminado definitivamente (hard delete)');
+    });
 });
