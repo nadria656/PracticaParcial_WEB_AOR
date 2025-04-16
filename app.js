@@ -6,8 +6,10 @@ const userRoutes = require('./routes/userRoutes');
 const onboardingRoutes = require('./routes/onBoardingRoutes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./docs/swaggerConfig');
-const clientRoutes = require('./routes/clientRoutes'); 
+const clientRoutes = require('./routes/clientRoutes');
 const projectRoutes = require('./routes/projectRoutes');
+const morganBody = require('morgan-body'); // Usaremos morgan-body para capturar logs
+const { IncomingWebhook } = require('@slack/webhook'); // Importamos IncomingWebhook
 
 dotenv.config();
 
@@ -30,10 +32,31 @@ app.use('/api/project', projectRoutes);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static('uploads'));
 
-// Determinamos el puerto según el entorno (si es test, usamos otro puerto)
-const PORT = process.env.PORT || (process.env.NODE_ENV === 'test' ? 4001 : 3000);
+// Configurar el webhook de Slack
+const webHook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL); // Usamos la URL del Webhook de Slack
+
+// Configurar morgan-body para capturar logs de 4XX y 5XX y enviarlos a Slack
+const loggerStream = {
+  write: (message) => {
+    // Enviar el log a Slack
+    webHook.send({
+      text: message
+    });
+  }
+};
+
+// Configuramos morgan-body para que envíe los logs de los errores (4XX y 5XX) a Slack
+morganBody(app, {
+  noColors: true, // Limpiar los logs antes de enviarlos
+  skip: function(req, res) {
+    // Solo enviamos logs de errores (4XX y 5XX)
+    return res.statusCode < 400;
+  },
+  stream: loggerStream
+});
 
 // El servidor no se inicia aquí
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
 });
