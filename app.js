@@ -10,6 +10,7 @@ const clientRoutes = require('./routes/clientRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const morganBody = require('morgan-body'); // Usaremos morgan-body para capturar logs
 const { IncomingWebhook } = require('@slack/webhook'); // Importamos IncomingWebhook
+const deliveryNoteRoutes = require('./routes/deliveryNoteRoutes'); // Importamos las rutas de albaranes
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use('/api/user', userRoutes);
 app.use('/api/onboarding', onboardingRoutes);
 app.use('/api/client', clientRoutes); 
 app.use('/api/project', projectRoutes);
+app.use('/api/deliverynote', deliveryNoteRoutes); 
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static('uploads'));

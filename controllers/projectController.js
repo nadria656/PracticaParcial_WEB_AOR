@@ -1,11 +1,19 @@
 const Project = require('../models/Project');
+const Cliente = require('../models/Cliente');  // Importamos el modelo de Cliente
 
-// Crear un proyecto
+// Crear proyecto
 const crearProyecto = async (req, res, next) => {
   try {
     const { nombre, descripcion, cliente, compania } = req.body;
     const usuarioId = req.user.id;  // Usuario autenticado
 
+    // Verificar si el cliente existe
+    const clienteExistente = await Cliente.findById(cliente);
+    if (!clienteExistente) {
+      return res.status(404).json({ mensaje: 'Cliente no encontrado' });
+    }
+
+    // Crear el proyecto
     const proyecto = new Project({
       nombre,
       descripcion,
@@ -20,6 +28,7 @@ const crearProyecto = async (req, res, next) => {
     next(error);
   }
 };
+
 
 
 // Actualizar un proyecto
