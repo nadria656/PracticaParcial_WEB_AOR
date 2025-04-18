@@ -11,6 +11,7 @@ const projectRoutes = require('./routes/projectRoutes');
 const morganBody = require('morgan-body'); // Usaremos morgan-body para capturar logs
 const { IncomingWebhook } = require('@slack/webhook'); // Importamos IncomingWebhook
 const deliveryNoteRoutes = require('./routes/deliveryNoteRoutes'); // Importamos las rutas de albaranes
+const path = require('path');
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/api/deliverynote', deliveryNoteRoutes);
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Configurar el webhook de Slack
 const webHook = new IncomingWebhook(process.env.SLACK_WEBHOOK_URL); // Usamos la URL del Webhook de Slack

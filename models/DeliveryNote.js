@@ -6,6 +6,8 @@ const deliveryNoteSchema = new mongoose.Schema({
   cliente: { type: mongoose.Schema.Types.ObjectId, ref: 'Cliente', required: true },
   total: { type: Number, required: true },
   proyecto: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
+  usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // ← añadido este campo
+
   horas: [
     {
       persona: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
@@ -18,6 +20,7 @@ const deliveryNoteSchema = new mongoose.Schema({
       cantidad: { type: Number, required: true }
     }
   ],
+
   firmado: { type: Boolean, default: false },
   firmaUrl: { type: String },
   pdfUrl: { type: String },  // URL del PDF subido a la nube

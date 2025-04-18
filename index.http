@@ -53,7 +53,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzN
 
 ### PATCH - Logo de la empresa
 PATCH http://localhost:3000/api/user/logo
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3OGUzNTYxMzk3OGIzZjIyMzhjNiIsImVtYWlsIjoiYWRtaW43QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQzNDE5NzMxLCJleHAiOjE3NDM0MjY5MzF9.YSBVCbkM5Y7XZqLZp6yk85lPhHWnSatO9IQ-n3Da9Ps
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
 Content-Type: multipart/form-data; boundary=MyBoundary
 
 --MyBoundary
@@ -223,11 +223,11 @@ Content-Type: application/json
 
 ### Crear albarán
 POST http://localhost:3000/api/deliverynote
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTE2NjY2LCJleHAiOjE3NDQ5MjM4NjZ9.3V-hEe2NJI8rfqiNojQxhYiXntW2UsIKKKiPFteILLc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
 Content-Type: application/json
 
 {
-  "numero": "123HOLA12345",
+  "numero": "HOLA12",
   "fecha": "2025-04-16",
   "cliente": "680150e98ae7af6ff6fe8706",  
   "total": 150.00,
@@ -248,6 +248,29 @@ Content-Type: application/json
 
 ### Listar albaranes
 GET http://localhost:3000/api/deliverynote
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTE2NjY2LCJleHAiOjE3NDQ5MjM4NjZ9.3V-hEe2NJI8rfqiNojQxhYiXntW2UsIKKKiPFteILLc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
+
+### Obtener albarán por ID
+GET http://localhost:3000/api/deliverynote/68028eb5fdf100fc99b0eb79
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
+
+### Eliminar albarán por ID (solo si no está firmado)
+DELETE http://localhost:3000/api/deliverynote/68029a6d50b25c79dac2d320
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
+
+### Descargar albarán en PDF
+GET http://localhost:3000/api/deliverynote/pdf/68029a6d50b25c79dac2d320
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
 
 
+### Firmar albarán
+PATCH http://localhost:3000/api/deliverynote/firmar/68029c9ba981a2f33d00fb80
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary123456
+
+------WebKitFormBoundary123456
+Content-Disposition: form-data; name="firma"; filename="jordi.jpg"
+Content-Type: image/png
+
+< jordi.jpg
+------WebKitFormBoundary123456--
