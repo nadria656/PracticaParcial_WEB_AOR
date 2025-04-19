@@ -6,21 +6,18 @@ const { obtenerAlbaranPorId } = require('../controllers/deliveryNoteController')
 const { eliminarAlbaran } = require('../controllers/deliveryNoteController');
 const { generarPdfAlbaran } = require('../controllers/deliveryNoteController');
 const { firmarAlbaran } = require('../controllers/deliveryNoteController');
+const { descargarPdfDesdeCloud } = require('../controllers/deliveryNoteController');
 const uploadFirma = require('../middleware/uploadFirma');
 const router = express.Router();
 
-// Crear albarán
-router.post('/', validarJWT, crearAlbaran);
-// Listar todos los albaranes
-router.get('/', validarJWT, listarAlbaranes);
-// Obtener un albarán por ID
-router.get('/:id', validarJWT, obtenerAlbaranPorId);
-// Eliminar un albarán por ID
-router.delete('/:id', validarJWT, eliminarAlbaran);
-// Generar PDF
 router.get('/pdf/:id', validarJWT, generarPdfAlbaran);
-// Firmar albarán
 router.patch('/firmar/:id', validarJWT, uploadFirma.single('firma'), firmarAlbaran);
+router.get('/cloud/:id', validarJWT, descargarPdfDesdeCloud);
 
+
+router.post('/', validarJWT, crearAlbaran);
+router.get('/', validarJWT, listarAlbaranes);
+router.get('/:id', validarJWT, obtenerAlbaranPorId);
+router.delete('/:id', validarJWT, eliminarAlbaran);
 
 module.exports = router;

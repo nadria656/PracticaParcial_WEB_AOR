@@ -6,6 +6,7 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 const { uploadToIPFS } = require('../utils/ipfs');
+const { generatePdf } = require('../utils/pdfGenerator'); 
 
 const crearAlbaran = async (req, res, next) => {
   try {
@@ -127,27 +128,32 @@ const generarPdfAlbaran = async (req, res, next) => {
       return res.status(404).json({ mensaje: 'Albarán no encontrado' });
     }
 
-    if (!albaran.usuario) {
-      return res.status(500).json({ mensaje: 'El albarán no tiene usuario asignado' });
-    }
-
-    // Permisos
     const esPropietario = albaran.usuario._id.toString() === req.user.id;
     const esGuestMismaEmpresa = req.user.role === 'guest' &&
       req.user.company?.toString() === albaran.usuario.company?.toString();
 
     if (!esPropietario && !esGuestMismaEmpresa) {
-      return res.status(403).json({ mensaje: 'No tienes permiso para descargar este albarán' });
+      return res.status(403).json({ mensaje: 'No tienes permiso para ver este albarán' });
+    }
+
+    // 🔁 Si ya tiene PDF generado (albarán firmado)
+    if (albaran.pdfUrl) {
+      return res.json({
+        mensaje: '✅ PDF ya generado',
+        pdfUrl: albaran.pdfUrl
+      });
     }
 
     // Generar PDF
-    const doc = new PDFDocument();
-    const filename = `albaran_${albaran.numero}.pdf`;
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.setHeader('Content-Type', 'application/pdf');
-    doc.pipe(res);
+    const fileName = `albaran_${albaran.numero}.pdf`;
+    const pdfDir = path.join(__dirname, '../uploads/pdfs');
+    if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
+    const pdfPath = path.join(pdfDir, fileName);
 
-    // Template simple (puedes mejorarlo)
+    const doc = new PDFDocument();
+    const stream = fs.createWriteStream(pdfPath);
+    doc.pipe(stream);
+
     doc.fontSize(20).text('Albarán', { align: 'center' });
     doc.moveDown();
 
@@ -161,9 +167,7 @@ const generarPdfAlbaran = async (req, res, next) => {
     doc.moveDown().fontSize(14).text('Horas:', { underline: true });
     if (albaran.horas && albaran.horas.length) {
       albaran.horas.forEach((h, i) => {
-        doc.fontSize(12).text(
-          `- ${h.persona ? h.persona.toString() : 'Desconocido'}: ${h.horasTrabajadas} horas`
-        );
+        doc.fontSize(12).text(`- ${h.persona ? h.persona.toString() : 'Desconocido'}: ${h.horasTrabajadas} horas`);
       });
     } else {
       doc.fontSize(12).text('No hay horas registradas.');
@@ -179,59 +183,102 @@ const generarPdfAlbaran = async (req, res, next) => {
     }
 
     doc.moveDown();
-    doc.fontSize(12).text(
-      `Estado: ${albaran.firmado ? 'FIRMADO' : 'NO FIRMADO'}`
-    );
+    doc.fontSize(12).text(`Estado: ${albaran.firmado ? 'FIRMADO' : 'NO FIRMADO'}`);
 
-    // Si está firmado y hay firma, añade nota
     if (albaran.firmado && albaran.firmaUrl) {
-      doc.moveDown().fontSize(12).text('Albarán firmado digitalmente.');
-      // Aquí puedes incluso insertar una imagen de la firma si quieres:
-      // doc.image('ruta_firma.png', { width: 100 });
+      const firmaPath = path.join(__dirname, '../uploads/firmas', path.basename(albaran.firmaUrl));
+      if (fs.existsSync(firmaPath)) {
+        doc.moveDown().fontSize(12).text('Firma digital:');
+        doc.image(firmaPath, { width: 100 });
+      } else {
+        doc.moveDown().text('Firma digital no disponible (archivo no encontrado).');
+      }
     }
 
     doc.end();
+
+    await new Promise((resolve, reject) => {
+      stream.on('finish', resolve);
+      stream.on('error', reject);
+    });
+
+    const pdfUrl = `${req.protocol}://${req.get('host')}/uploads/pdfs/${fileName}`;
+
+    // Guardar pdfUrl si ya está firmado
+    if (albaran.firmado && !albaran.pdfUrl) {
+      albaran.pdfUrl = pdfUrl;
+      await albaran.save();
+    }
+
+    res.json({
+      mensaje: '✅ PDF generado correctamente',
+      pdfUrl
+    });
+
   } catch (error) {
     next(error);
   }
 };
+
 
 
 
 const firmarAlbaran = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const albaran = await DeliveryNote.findById(id)
+      .populate('usuario')
+      .populate('cliente')
+      .populate('proyecto');
 
-    const albaran = await DeliveryNote.findById(id);
-    if (!albaran) {
-      return res.status(404).json({ mensaje: 'Albarán no encontrado' });
-    }
-
-    if (albaran.firmado) {
-      return res.status(400).json({ mensaje: 'Este albarán ya está firmado' });
-    }
-
-    if (!req.file) {
-      return res.status(400).json({ mensaje: 'No se ha subido ninguna firma' });
-    }
+    if (!albaran) return res.status(404).json({ mensaje: 'Albarán no encontrado' });
+    if (albaran.firmado) return res.status(400).json({ mensaje: 'Ya está firmado' });
+    if (!req.file) return res.status(400).json({ mensaje: 'No se ha subido ninguna firma' });
 
     const firmaFile = req.file.filename;
     const firmaUrl = `${req.protocol}://${req.get('host')}/uploads/firmas/${firmaFile}`;
 
+    // Marcar como firmado
     albaran.firmado = true;
     albaran.firmaUrl = firmaUrl;
     albaran.fechaFirma = new Date();
+
+    // 🔨 Generar PDF temporal con firma
+    const pdfPath = await generatePdf(albaran); // genera PDF con firma
+
+    // 🔼 Subir PDF a "cloud"
+    const pdfUrl = `${req.protocol}://${req.get('host')}/uploads/pdfs/${path.basename(pdfPath)}`;
+    albaran.pdfUrl = pdfUrl;
 
     await albaran.save();
 
     res.json({
       msg: '✅ Albarán firmado correctamente',
-      firmaUrl
+      firmaUrl,
+      pdfUrl
     });
   } catch (error) {
     next(error);
   }
 };
+
+const descargarPdfDesdeCloud = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const albaran = await DeliveryNote.findById(id);
+
+    if (!albaran) return res.status(404).json({ mensaje: 'Albarán no encontrado' });
+
+    if (albaran.pdfUrl) {
+      return res.redirect(albaran.pdfUrl); // redirige al PDF subido
+    }
+
+    return res.status(404).json({ mensaje: 'PDF no disponible en la nube' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 module.exports = {
   crearAlbaran,
@@ -239,5 +286,6 @@ module.exports = {
   obtenerAlbaranPorId,
   eliminarAlbaran,
   generarPdfAlbaran,
-  firmarAlbaran
+  firmarAlbaran,
+  descargarPdfDesdeCloud
 };

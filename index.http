@@ -3,17 +3,17 @@ POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-  "email": "admin8@example.com",
+  "email": "admin9@example.com",
   "password": "12345678"
 }
 
 ###  Validación de email 
 PUT http://localhost:3000/api/user/validation
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MTk5NjIwLCJleHAiOjE3NDQyMDY4MjB9.7BdkMDtlGPLiskf-t-wqlQGy7uAOVkuHCkNjX42X5YQ
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MDM4Mzk0Y2I3MTdkYjY5YjEyZjY4OCIsImVtYWlsIjoiYWRtaW45QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ1MDYwNzU2LCJleHAiOjE3NDUwNjc5NTZ9.qKYs1zoGzdx0nNWk5vBNPUzFk5-pdA1HnrepATHxiHw
 
 {
-  "code": "689962"
+  "code": "348972"
 }
 
 
@@ -22,7 +22,7 @@ POST http://localhost:3000/api/user/login
 Content-Type: application/json
 
 {
-  "email": "admin8@example.com",
+  "email": "admin9@example.com",
   "password": "12345678"
 }
 
@@ -124,7 +124,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzN
 ### Crear cliente
 POST http://localhost:3000/api/client
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTE2NjY2LCJleHAiOjE3NDQ5MjM4NjZ9.3V-hEe2NJI8rfqiNojQxhYiXntW2UsIKKKiPFteILLc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA
 
 {
   "nombre": "Ferretería El Gitano6",
@@ -140,7 +140,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0M
 
 ### Listar clientes
 GET http://localhost:3000/api/client
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTE2NjY2LCJleHAiOjE3NDQ5MjM4NjZ9.3V-hEe2NJI8rfqiNojQxhYiXntW2UsIKKKiPFteILLc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA
 ### Obtener un cliente concreto
 GET http://localhost:3000/api/client/67f7b6ae066ff839ebbc3313
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0MjgzNzIwLCJleHAiOjE3NDQyOTA5MjB9.HZEhrAJAKGqVKRHAQm_f_erQhYcUuwPRwpid9SaIcaw
@@ -166,19 +166,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0M
 
 ### Crear Proyecto
 POST http://localhost:3000/api/project
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTE2NjY2LCJleHAiOjE3NDQ5MjM4NjZ9.3V-hEe2NJI8rfqiNojQxhYiXntW2UsIKKKiPFteILLc
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA
 Content-Type: application/json
+
 
 {
   "nombre": "Proyecto Gitano",
   "descripcion": "Proyecto para crear un simulador de gitano",
-  "cliente": "680150e98ae7af6ff6fe8706" 
+  "cliente": "68037caa04eefb674d07f710" 
 }
 
 
 ### Actualizar Proyecto
 PUT http://localhost:3000/api/project/67ffc960c52cdb2f29d0361b  
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0ODEzMTM1LCJleHAiOjE3NDQ4MjAzMzV9.zhy57Hlf4gnCYhaIOcW1mBTlwSUarHm7ITp_XOZO04M
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA
 Content-Type: application/json
 
 {
@@ -223,13 +224,13 @@ Content-Type: application/json
 
 ### Crear albarán
 POST http://localhost:3000/api/deliverynote
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA
 Content-Type: application/json
 
 {
-  "numero": "HOLA12",
+  "numero": "HOLA1234",
   "fecha": "2025-04-16",
-  "cliente": "680150e98ae7af6ff6fe8706",  
+  "cliente": "68037caa04eefb674d07f710",  
   "total": 150.00,
   "proyecto": "6801573ff6bde9cb8ac944c1",  
   "horas": [
@@ -248,8 +249,7 @@ Content-Type: application/json
 
 ### Listar albaranes
 GET http://localhost:3000/api/deliverynote
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA
 ### Obtener albarán por ID
 GET http://localhost:3000/api/deliverynote/68028eb5fdf100fc99b0eb79
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
@@ -259,13 +259,13 @@ DELETE http://localhost:3000/api/deliverynote/68029a6d50b25c79dac2d320
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
 
 ### Descargar albarán en PDF
-GET http://localhost:3000/api/deliverynote/pdf/68029a6d50b25c79dac2d320
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
+GET http://localhost:3000/api/deliverynote/pdf/68037e8bf32a62c51f37ad38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA
 
 
 ### Firmar albarán
-PATCH http://localhost:3000/api/deliverynote/firmar/68029c9ba981a2f33d00fb80
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZjY1ZmM0MTlhYjhkOTZmYWJhMmQwOSIsImVtYWlsIjoiYWRtaW44QGV4YW1wbGUuY29tIiwiaWF0IjoxNzQ0OTk3MDQ5LCJleHAiOjE3NDUwMDQyNDl9.VFAv-M_lf6isbXMk5oK0W-xCSZuhpAnSZftVo8b--mo
+PATCH http://localhost:3000/api/deliverynote/firmar/68037e8bf32a62c51f37ad38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary123456
 
 ------WebKitFormBoundary123456
@@ -274,3 +274,8 @@ Content-Type: image/png
 
 < jordi.jpg
 ------WebKitFormBoundary123456--
+
+
+### Descargar PDF desde la nube (redirige)
+GET http://localhost:3000/api/deliverynote/cloud/68037e8bf32a62c51f37ad38
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3ZWE3YTgzNTYxMzk3OGIzZjIyMzhkOSIsImVtYWlsIjoiY29tcGHDsWVybzZAZXhhbXBsZS5jb20iLCJpYXQiOjE3NDUwNTkxMzQsImV4cCI6MTc0NTA2NjMzNH0.ePlI0MddS0mfxrFhO6epeomsObqZVCQ1fLA-TWei5JA

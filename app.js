@@ -59,10 +59,11 @@ morganBody(app, {
   stream: loggerStream
 });
 
-// El servidor no se inicia aquí
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-});
+if (require.main === module) {
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+  });
+}
 
 module.exports = app;  // Exportamos la app para usarla en los tests
