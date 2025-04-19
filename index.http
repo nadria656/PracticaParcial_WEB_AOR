@@ -3,17 +3,17 @@ POST http://localhost:3000/api/user/register
 Content-Type: application/json
 
 {
-  "email": "p.rojaslucia@gmail.com",
+  "email": "nadria2323@gmail.com",
   "password": "12345678"
 }
 
 ###  Validación de email 
 PUT http://localhost:3000/api/user/validation
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MDNmNjU2NTRhZjFhODA1YWMxNzBhMyIsImVtYWlsIjoicC5yb2phc2x1Y2lhQGdtYWlsLmNvbSIsImlhdCI6MTc0NTA5MDEzNSwiZXhwIjoxNzQ1MDk3MzM1fQ.Funkl3qYOFxoRLSjRLEaxTpNUwlVWzmOkKlIjFERC4k
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MDNmN2RlYmNkYWE3YTNlMTI1ODU3MSIsImVtYWlsIjoibmFkcmlhMjMyM0BnbWFpbC5jb20iLCJpYXQiOjE3NDUwOTA1MjcsImV4cCI6MTc0NTA5NzcyN30.iAjskF_C2CTAmNGMidUUqHO_r18zLLvWtPQ868gdiVg
 
 {
-  "code": "549571"
+  "code": "259858"
 }
 
 

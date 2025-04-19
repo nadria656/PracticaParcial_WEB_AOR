@@ -1,0 +1,27 @@
+# Puerto en el que se ejecutará tu servidor Express
+PORT=3000
+
+# Cadena de conexión a tu base de datos MongoDB Atlas
+DB_URI="mongodb+srv://<usuario>:<password>@<cluster>.mongodb.net/<dbname>"
+
+# Clave secreta para firmar tokens JWT
+JWT_SECRET="supersecreto"
+
+# Webhook de Slack (opcional)
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/...
+
+# ---- CONFIGURACIÓN PARA ENVÍO DE EMAIL CON GMAIL Y OAuth2 ----
+# Dirección de email desde la que se enviarán los correos
+EMAIL=nadria656@gmail.com
+
+# ID del cliente OAuth de tu proyecto en Google Cloud
+CLIENT_ID=xxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com
+
+# Secreto del cliente OAuth generado por Google
+CLIENT_SECRET=GOCSPX-xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Token de actualización generado con OAuth2
+REFRESH_TOKEN=1//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# URI de redirección usada para obtener el refresh token
+REDIRECT_URI=https://developers.google.com/oauthplayground
