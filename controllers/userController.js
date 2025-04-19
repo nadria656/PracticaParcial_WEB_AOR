@@ -2,6 +2,7 @@ const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
+const sendEmail = require('../utils/sendEmail'); 
 
 const generateCode = () => Math.floor(100000 + Math.random() * 900000).toString();
 
@@ -29,6 +30,14 @@ exports.register = async (req, res) => {
 
     await user.save();
 
+    // ✉️ Enviar email con el código de validación
+    await sendEmail({
+      to: user.email,
+      subject: '📩 Código de verificación',
+      text: `Tu código de verificación es: ${code}`,
+      html: `<p>Hola,</p><p>Gracias por registrarte. Tu código de verificación es: <strong>${code}</strong></p><p>Úsalo para activar tu cuenta.</p>`
+    });
+
     const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: '2h'
     });
@@ -41,13 +50,14 @@ exports.register = async (req, res) => {
     });
 
   } catch (error) {
-    // Manejo del error por email duplicado (único)
+    console.error('🔥 Error en registro:', error); // 👈 Añadido para ver el fallo real
     if (error.code === 11000 && error.keyPattern?.email) {
       return res.status(409).json({ msg: 'El email ya está registrado.' });
     }
-
+  
     res.status(500).json({ msg: 'Error del servidor', error });
   }
+  
 };
 
 
