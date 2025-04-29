@@ -14,6 +14,19 @@ const {
 
 /**
  * @swagger
+ * /project/archived:
+ *   get:
+ *     summary: Listar proyectos archivados
+ *     tags: [Proyectos]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de proyectos archivados
+ */
+router.get('/archived', validarJWT, listarProyectosArchivados);
+/**
+ * @swagger
  * tags:
  *   name: Proyectos
  *   description: Endpoints para gestión de proyectos
@@ -122,19 +135,7 @@ router.put('/:id', validarJWT, actualizarProyecto);
  */
 router.delete('/:id', validarJWT, eliminarProyecto);
 
-/**
- * @swagger
- * /project/archived:
- *   get:
- *     summary: Listar proyectos archivados
- *     tags: [Proyectos]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Lista de proyectos archivados
- */
-router.get('/archived', validarJWT, listarProyectosArchivados);
+
 
 /**
  * @swagger

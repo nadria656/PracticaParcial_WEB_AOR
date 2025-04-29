@@ -6,26 +6,20 @@ const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
 const { uploadToIPFS } = require('../utils/ipfs');
-const { generatePdf } = require('../utils/pdfGenerator'); 
+const { generatePdf } = require('../utils/pdfGenerator');
 
-const crearAlbaran = async (req, res, next) => {
+// Crear un nuevo albarán
+const crearAlbaran = async (req, res) => {
   try {
     const { numero, fecha, cliente, total, proyecto, horas, materiales } = req.body;
-    const usuarioId = req.user.id;  // Usuario autenticado
+    const usuarioId = req.user.id;
 
-    // Verificar si el proyecto existe
     const proyectoExistente = await Project.findById(proyecto);
-    if (!proyectoExistente) {
-      return res.status(404).json({ mensaje: 'Proyecto no encontrado' });
-    }
+    if (!proyectoExistente) return res.status(404).json({ msg: 'Proyecto no encontrado.' });
 
-    // Verificar si el cliente existe
     const clienteExistente = await Cliente.findById(cliente);
-    if (!clienteExistente) {
-      return res.status(404).json({ mensaje: 'Cliente no encontrado' });
-    }
+    if (!clienteExistente) return res.status(404).json({ msg: 'Cliente no encontrado.' });
 
-    // Crear el albarán
     const albaran = new DeliveryNote({
       numero,
       fecha,
@@ -34,17 +28,20 @@ const crearAlbaran = async (req, res, next) => {
       proyecto,
       horas,
       materiales,
-      usuario: usuarioId  // Asegúrate de que el usuario es el correcto
+      usuario: usuarioId
     });
 
     const albaranGuardado = await albaran.save();
     res.status(201).json(albaranGuardado);
+
   } catch (error) {
-    next(error);
+    console.error('[crearAlbaran] Error al crear albarán:', error);
+    res.status(500).json({ msg: 'Error interno al crear albarán.', error });
   }
 };
 
-const listarAlbaranes = async (req, res, next) => {
+// Listar todos los albaranes
+const listarAlbaranes = async (req, res) => {
   try {
     const usuarioId = req.user.id;
     const companiaId = req.user.company || null;
@@ -54,68 +51,18 @@ const listarAlbaranes = async (req, res, next) => {
         { usuario: usuarioId },
         { compania: companiaId }
       ]
-    }).sort({ fecha: -1 }); 
+    }).sort({ fecha: -1 });
 
     res.json(albaranes);
+
   } catch (error) {
-    next(error);
+    console.error('[listarAlbaranes] Error al listar albaranes:', error);
+    res.status(500).json({ msg: 'Error interno al listar albaranes.', error });
   }
 };
 
-const obtenerAlbaranPorId = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-
-    const albaran = await DeliveryNote.findById(id)
-      .populate('usuario', 'name email company') // ← Asegúrate que traemos 'company'
-      .populate('cliente')
-      .populate('proyecto');
-
-    if (!albaran) {
-      return res.status(404).json({ mensaje: 'Albarán no encontrado' });
-    }
-
-    if (!albaran.usuario) {
-      return res.status(500).json({ mensaje: 'El albarán no tiene usuario asignado' });
-    }
-
-    const esPropietario = albaran.usuario._id.toString() === req.user.id;
-    const esGuestMismaEmpresa = req.user.role === 'guest' &&
-      req.user.company?.toString() === albaran.usuario.company?.toString();
-
-    if (!esPropietario && !esGuestMismaEmpresa) {
-      return res.status(403).json({ mensaje: 'No tienes permiso para ver este albarán' });
-    }
-
-    res.json(albaran);
-  } catch (error) {
-    next(error);
-  }
-};
-
-const eliminarAlbaran = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-
-    const albaran = await DeliveryNote.findById(id);
-
-    if (!albaran) {
-      return res.status(404).json({ mensaje: 'Albarán no encontrado' });
-    }
-
-    if (albaran.firmado) {
-      return res.status(403).json({ mensaje: 'No se puede eliminar un albarán firmado' });
-    }
-
-    await albaran.deleteOne();
-
-    res.json({ mensaje: 'Albarán eliminado correctamente' });
-  } catch (error) {
-    next(error);
-  }
-};
-
-const generarPdfAlbaran = async (req, res, next) => {
+// Obtener un albarán por ID
+const obtenerAlbaranPorId = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -124,27 +71,70 @@ const generarPdfAlbaran = async (req, res, next) => {
       .populate('cliente')
       .populate('proyecto');
 
-    if (!albaran) {
-      return res.status(404).json({ mensaje: 'Albarán no encontrado' });
-    }
+    if (!albaran) return res.status(404).json({ msg: 'Albarán no encontrado.' });
+
+    if (!albaran.usuario) return res.status(500).json({ msg: 'El albarán no tiene usuario asignado.' });
 
     const esPropietario = albaran.usuario._id.toString() === req.user.id;
     const esGuestMismaEmpresa = req.user.role === 'guest' &&
       req.user.company?.toString() === albaran.usuario.company?.toString();
 
     if (!esPropietario && !esGuestMismaEmpresa) {
-      return res.status(403).json({ mensaje: 'No tienes permiso para ver este albarán' });
+      return res.status(403).json({ msg: 'No tienes permiso para ver este albarán.' });
     }
 
-    // 🔁 Si ya tiene PDF generado (albarán firmado)
+    res.json(albaran);
+
+  } catch (error) {
+    console.error('[obtenerAlbaranPorId] Error al obtener albarán:', error);
+    res.status(500).json({ msg: 'Error interno al obtener albarán.', error });
+  }
+};
+
+// Eliminar un albarán (solo si no está firmado)
+const eliminarAlbaran = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const albaran = await DeliveryNote.findById(id);
+
+    if (!albaran) return res.status(404).json({ msg: 'Albarán no encontrado.' });
+
+    if (albaran.firmado) return res.status(403).json({ msg: 'No se puede eliminar un albarán firmado.' });
+
+    await albaran.deleteOne();
+
+    res.json({ msg: 'Albarán eliminado correctamente.' });
+
+  } catch (error) {
+    console.error('[eliminarAlbaran] Error al eliminar albarán:', error);
+    res.status(500).json({ msg: 'Error interno al eliminar albarán.', error });
+  }
+};
+
+// Generar PDF de un albarán
+const generarPdfAlbaran = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const albaran = await DeliveryNote.findById(id)
+      .populate('usuario', 'name email company')
+      .populate('cliente')
+      .populate('proyecto');
+
+    if (!albaran) return res.status(404).json({ msg: 'Albarán no encontrado.' });
+
+    const esPropietario = albaran.usuario._id.toString() === req.user.id;
+    const esGuestMismaEmpresa = req.user.role === 'guest' &&
+      req.user.company?.toString() === albaran.usuario.company?.toString();
+
+    if (!esPropietario && !esGuestMismaEmpresa) {
+      return res.status(403).json({ msg: 'No tienes permiso para ver este albarán.' });
+    }
+
     if (albaran.pdfUrl) {
-      return res.json({
-        mensaje: '✅ PDF ya generado',
-        pdfUrl: albaran.pdfUrl
-      });
+      return res.json({ msg: 'PDF ya generado.', pdfUrl: albaran.pdfUrl });
     }
 
-    // Generar PDF
     const fileName = `albaran_${albaran.numero}.pdf`;
     const pdfDir = path.join(__dirname, '../uploads/pdfs');
     if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
@@ -156,26 +146,25 @@ const generarPdfAlbaran = async (req, res, next) => {
 
     doc.fontSize(20).text('Albarán', { align: 'center' });
     doc.moveDown();
-
     doc.fontSize(12).text(`Número: ${albaran.numero}`);
     doc.text(`Fecha: ${new Date(albaran.fecha).toLocaleDateString()}`);
-    doc.text(`Usuario: ${albaran.usuario.name} (${albaran.usuario.email})`);
-    doc.text(`Cliente: ${albaran.cliente.nombre || albaran.cliente.razonSocial || ''}`);
-    doc.text(`Proyecto: ${albaran.proyecto.nombre || ''}`);
+    doc.text(`Usuario: ${albaran.usuario.name}`);
+    doc.text(`Cliente: ${albaran.cliente?.nombre || ''}`);
+    doc.text(`Proyecto: ${albaran.proyecto?.nombre || ''}`);
     doc.text(`Total: ${albaran.total} €`);
 
     doc.moveDown().fontSize(14).text('Horas:', { underline: true });
-    if (albaran.horas && albaran.horas.length) {
-      albaran.horas.forEach((h, i) => {
-        doc.fontSize(12).text(`- ${h.persona ? h.persona.toString() : 'Desconocido'}: ${h.horasTrabajadas} horas`);
+    if (albaran.horas?.length) {
+      albaran.horas.forEach(h => {
+        doc.fontSize(12).text(`- ${h.persona || 'Desconocido'}: ${h.horasTrabajadas} horas`);
       });
     } else {
       doc.fontSize(12).text('No hay horas registradas.');
     }
 
     doc.moveDown().fontSize(14).text('Materiales:', { underline: true });
-    if (albaran.materiales && albaran.materiales.length) {
-      albaran.materiales.forEach((m, i) => {
+    if (albaran.materiales?.length) {
+      albaran.materiales.forEach(m => {
         doc.fontSize(12).text(`- ${m.material}: ${m.cantidad}`);
       });
     } else {
@@ -188,10 +177,8 @@ const generarPdfAlbaran = async (req, res, next) => {
     if (albaran.firmado && albaran.firmaUrl) {
       const firmaPath = path.join(__dirname, '../uploads/firmas', path.basename(albaran.firmaUrl));
       if (fs.existsSync(firmaPath)) {
-        doc.moveDown().fontSize(12).text('Firma digital:');
+        doc.moveDown().text('Firma digital:');
         doc.image(firmaPath, { width: 100 });
-      } else {
-        doc.moveDown().text('Firma digital no disponible (archivo no encontrado).');
       }
     }
 
@@ -204,81 +191,74 @@ const generarPdfAlbaran = async (req, res, next) => {
 
     const pdfUrl = `${req.protocol}://${req.get('host')}/uploads/pdfs/${fileName}`;
 
-    // Guardar pdfUrl si ya está firmado
     if (albaran.firmado && !albaran.pdfUrl) {
       albaran.pdfUrl = pdfUrl;
       await albaran.save();
     }
 
-    res.json({
-      mensaje: '✅ PDF generado correctamente',
-      pdfUrl
-    });
+    res.json({ msg: 'PDF generado correctamente.', pdfUrl });
 
   } catch (error) {
-    next(error);
+    console.error('[generarPdfAlbaran] Error al generar PDF:', error);
+    res.status(500).json({ msg: 'Error interno al generar PDF.', error });
   }
 };
 
-
-
-
-const firmarAlbaran = async (req, res, next) => {
+// Firmar un albarán
+const firmarAlbaran = async (req, res) => {
   try {
     const { id } = req.params;
+
     const albaran = await DeliveryNote.findById(id)
       .populate('usuario')
       .populate('cliente')
       .populate('proyecto');
 
-    if (!albaran) return res.status(404).json({ mensaje: 'Albarán no encontrado' });
-    if (albaran.firmado) return res.status(400).json({ mensaje: 'Ya está firmado' });
-    if (!req.file) return res.status(400).json({ mensaje: 'No se ha subido ninguna firma' });
+    if (!albaran) return res.status(404).json({ msg: 'Albarán no encontrado.' });
+    if (albaran.firmado) return res.status(400).json({ msg: 'Ya está firmado.' });
+    if (!req.file) return res.status(400).json({ msg: 'No se ha subido ninguna firma.' });
 
     const firmaFile = req.file.filename;
     const firmaUrl = `${req.protocol}://${req.get('host')}/uploads/firmas/${firmaFile}`;
 
-    // Marcar como firmado
     albaran.firmado = true;
     albaran.firmaUrl = firmaUrl;
     albaran.fechaFirma = new Date();
 
-    // 🔨 Generar PDF temporal con firma
-    const pdfPath = await generatePdf(albaran); // genera PDF con firma
-
-    // 🔼 Subir PDF a "cloud"
+    const pdfPath = await generatePdf(albaran);
     const pdfUrl = `${req.protocol}://${req.get('host')}/uploads/pdfs/${path.basename(pdfPath)}`;
+
     albaran.pdfUrl = pdfUrl;
 
     await albaran.save();
 
-    res.json({
-      msg: '✅ Albarán firmado correctamente',
-      firmaUrl,
-      pdfUrl
-    });
+    res.json({ msg: 'Albarán firmado correctamente.', firmaUrl, pdfUrl });
+
   } catch (error) {
-    next(error);
+    console.error('[firmarAlbaran] Error al firmar albarán:', error);
+    res.status(500).json({ msg: 'Error interno al firmar albarán.', error });
   }
 };
 
-const descargarPdfDesdeCloud = async (req, res, next) => {
+// Descargar PDF desde cloud
+const descargarPdfDesdeCloud = async (req, res) => {
   try {
     const { id } = req.params;
     const albaran = await DeliveryNote.findById(id);
 
-    if (!albaran) return res.status(404).json({ mensaje: 'Albarán no encontrado' });
+    if (!albaran) return res.status(404).json({ msg: 'Albarán no encontrado.' });
 
     if (albaran.pdfUrl) {
-      return res.redirect(albaran.pdfUrl); // redirige al PDF subido
+      return res.redirect(albaran.pdfUrl);
     }
 
-    return res.status(404).json({ mensaje: 'PDF no disponible en la nube' });
+    res.status(404).json({ msg: 'PDF no disponible en la nube.' });
+
   } catch (error) {
-    next(error);
+    console.error('[descargarPdfDesdeCloud] Error al descargar PDF:', error);
+    res.status(500).json({ msg: 'Error interno al descargar PDF.', error });
   }
 };
-
 
 module.exports = {
   crearAlbaran,
