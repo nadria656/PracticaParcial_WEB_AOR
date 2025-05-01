@@ -25,3 +25,7 @@ REFRESH_TOKEN=1//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # URI de redirección usada para obtener el refresh token
 REDIRECT_URI=https://developers.google.com/oauthplayground
+
+## Claves de Pinata para subir archivos a IPFS (usa tus propias claves en el archivo .env real)
+PINATA_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+PINATA_SECRET_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx

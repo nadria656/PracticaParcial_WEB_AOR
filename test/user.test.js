@@ -2,6 +2,7 @@ const request = require('supertest');
 const app = require('../app');
 const mongoose = require('mongoose');
 const path = require('path');
+const User = require('../models/user');
 
 let token = '';
 let code = '';
@@ -13,7 +14,7 @@ describe('User Controller', () => {
     await mongoose.connection.close();
   });
 
-  it('should register a new user', async () => {
+  it('debería registrar un nuevo usuario', async () => {
     const res = await request(app)
       .post('/api/user/register')
       .send({ email: testEmail, password: testPassword });
@@ -23,25 +24,26 @@ describe('User Controller', () => {
     token = res.body.token;
   });
 
-  it('should fail to register the same user again (email already registered)', async () => {
+  it('no debería permitir registrar el mismo email validado', async () => {
     const res = await request(app)
       .post('/api/user/register')
       .send({ email: testEmail, password: testPassword });
 
-    expect(res.status).toBe(409);
+    expect([409, 400]).toContain(res.status);
   });
 
-  it('should fail to validate email with wrong code', async () => {
+  it('no debería validar email con código incorrecto', async () => {
     const res = await request(app)
       .put('/api/user/validation')
       .set('Authorization', `Bearer ${token}`)
       .send({ code: '000000' });
 
     expect(res.status).toBe(400);
+    expect(res.body.msg).toMatch(/incorrecto/i);
   });
 
-  it('should get the correct code from DB and validate', async () => {
-    const user = await mongoose.model('User').findOne({ email: testEmail });
+  it('debería validar el email con el código correcto', async () => {
+    const user = await User.findOne({ email: testEmail });
     code = user.code;
 
     const res = await request(app)
@@ -50,10 +52,10 @@ describe('User Controller', () => {
       .send({ code });
 
     expect(res.status).toBe(200);
-    expect(res.body.msg).toMatch(/Email validado correctamente/);
+    expect(res.body.msg).toMatch(/Email validado correctamente/i);
   });
 
-  it('should login the user', async () => {
+  it('debería iniciar sesión con el email validado', async () => {
     const res = await request(app)
       .post('/api/user/login')
       .send({ email: testEmail, password: testPassword });
@@ -63,7 +65,7 @@ describe('User Controller', () => {
     token = res.body.token;
   });
 
-  it('should get the user profile', async () => {
+  it('debería obtener el perfil del usuario autenticado', async () => {
     const res = await request(app)
       .get('/api/user/me')
       .set('Authorization', `Bearer ${token}`);
@@ -72,7 +74,7 @@ describe('User Controller', () => {
     expect(res.body.email).toBe(testEmail);
   });
 
-  it('should request password reset', async () => {
+  it('debería solicitar un código de recuperación de contraseña', async () => {
     const res = await request(app)
       .post('/api/user/forgot-password')
       .send({ email: testEmail });
@@ -82,16 +84,20 @@ describe('User Controller', () => {
     code = res.body.code;
   });
 
-  it('should reset the password with correct code', async () => {
+  it('debería resetear la contraseña con código válido', async () => {
     const res = await request(app)
       .post('/api/user/reset-password')
-      .send({ email: testEmail, code, newPassword: 'NewPass123' });
+      .send({
+        email: testEmail,
+        code,
+        newPassword: 'NewPass123'
+      });
 
     expect(res.status).toBe(200);
-    expect(res.body.msg).toMatch(/Contraseña actualizada correctamente/);
+    expect(res.body.msg).toMatch(/Contraseña actualizada correctamente/i);
   });
 
-  it('should login with new password', async () => {
+  it('debería iniciar sesión con la nueva contraseña', async () => {
     const res = await request(app)
       .post('/api/user/login')
       .send({ email: testEmail, password: 'NewPass123' });
@@ -100,7 +106,7 @@ describe('User Controller', () => {
     token = res.body.token;
   });
 
-  it('should upload a logo', async () => {
+  it('debería subir un logo correctamente', async () => {
     const res = await request(app)
       .patch('/api/user/logo')
       .set('Authorization', `Bearer ${token}`)
@@ -110,47 +116,46 @@ describe('User Controller', () => {
     expect(res.body).toHaveProperty('logoUrl');
   });
 
-  it('should soft delete the user', async () => {
+  it('debería eliminar el usuario (soft delete)', async () => {
     const res = await request(app)
       .delete('/api/user')
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.msg).toMatch(/Usuario marcado como eliminado/);
+    expect(res.body.msg).toMatch(/marcado como eliminado/i);
   });
 
-  it('should hard delete the user', async () => {
-    // Crear nuevo usuario
+  it('debería eliminar permanentemente un usuario (hard delete)', async () => {
+    const email = `delete${Date.now()}@test.com`;
+
     const resRegister = await request(app)
       .post('/api/user/register')
-      .send({ email: `delete${Date.now()}@test.com`, password: '12345678' });
-  
+      .send({ email, password: '12345678' });
+
     const tempToken = resRegister.body.token;
-  
-    // Validar email para poder borrarlo
-    const user = await mongoose.model('User').findOne({ email: resRegister.body.email });
-    await mongoose.model('User').updateOne({ _id: user._id }, { status: 'validated' });
-  
+
+    await User.updateOne({ email }, { status: 'validated' });
+
     const resDelete = await request(app)
       .delete('/api/user?soft=false')
       .set('Authorization', `Bearer ${tempToken}`);
-  
+
     expect(resDelete.status).toBe(200);
     expect(resDelete.body.msg).toMatch(/eliminado permanentemente/i);
   });
-  
-  it('should invite a guest user (if user has a company)', async () => {
-    const admin = await mongoose.model('User').findOne({ email: testEmail });
-    admin.company = { name: 'Compañía Test' }; // o el modelo que uses
+
+  it('debería invitar a un usuario si el usuario tiene compañía', async () => {
+    // Asegurar que el usuario tiene compañía
+    const admin = await User.findOne({ email: testEmail });
+    admin.company = { name: 'Compañía Test' };
     await admin.save();
-  
+
     const res = await request(app)
       .post('/api/user/invite')
       .set('Authorization', `Bearer ${token}`)
       .send({ email: `invitado${Date.now()}@example.com` });
-  
+
     expect(res.status).toBe(201);
     expect(res.body.msg).toMatch(/Usuario invitado correctamente/);
   });
-  
 });

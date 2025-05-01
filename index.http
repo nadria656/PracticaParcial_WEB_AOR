@@ -1,4 +1,4 @@
-@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTEwM2JkY2I4YTc4OGZhZjZlODU0YSIsImVtYWlsIjoiZ2lnYW1heHJheXF1YXphQGdtYWlsLmNvbSIsImlhdCI6MTc0NTk0NjM0NywiZXhwIjoxNzQ1OTUzNTQ3fQ.pG9SQsptpw9dyn64jdZUubBzkMPbeP5me6WWyWq0lDs
+@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTEwM2JkY2I4YTc4OGZhZjZlODU0YSIsImVtYWlsIjoiZ2lnYW1heHJheXF1YXphQGdtYWlsLmNvbSIsImlhdCI6MTc0NjExNTQ1MSwiZXhwIjoxNzQ2MTIyNjUxfQ.bTW2Dz8WnOONZ3VG2pNA-0zCQDvuApCEhnW33y7Qnig
 
 
 ### Registro de usuario
@@ -176,7 +176,7 @@ Content-Type: application/json
 {
   "nombre": "Proyecto Gitano",
   "descripcion": "Proyecto para crear un simulador de gitano",
-  "cliente": "68110afac04556d6ddb84ccd" 
+  "cliente": "6813a4df007b044b21cf2cdd" 
 }
 
 
@@ -231,11 +231,11 @@ Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
 {
-  "numero": "12HOLA1234221",
+  "numero": "adios3",
   "fecha": "2025-04-16",
-  "cliente": "68110afac04556d6ddb84ccd",  
+  "cliente": "6813a4df007b044b21cf2cdd",  
   "total": 700,
-  "proyecto": "68110b0ec04556d6ddb84cd1",  
+  "proyecto": "680151138ae7af6ff6fe8708",  
   "horas": [
     {
       "persona": "67f7b6ae066ff839ebbc3314",  
@@ -262,12 +262,12 @@ DELETE http://localhost:3000/api/deliverynote/68110b19c04556d6ddb84cd5
 Authorization: Bearer {{TOKEN}}
 
 ### Descargar albarán en PDF
-GET http://localhost:3000/api/deliverynote/pdf/68110b55c04556d6ddb84ceb
+GET http://localhost:3000/api/deliverynote/pdf/6813a533d12684ff06885e7d
 Authorization: Bearer {{TOKEN}}
 
 
 ### Firmar albarán (subiendo archivo con form-data)
-PATCH http://localhost:3000/api/deliverynote/firmar/68110b55c04556d6ddb84ceb
+PATCH http://localhost:3000/api/deliverynote/firmar/6813a533d12684ff06885e7d
 Authorization: Bearer {{TOKEN}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -281,5 +281,5 @@ Content-Type: image/jpeg
 
 
 ### Descargar PDF desde la nube (redirige)
-GET http://localhost:3000/api/deliverynote/cloud/68110b55c04556d6ddb84ceb
+GET http://localhost:3000/api/deliverynote/cloud/6813a533d12684ff06885e7d
 Authorization: Bearer {{TOKEN}}

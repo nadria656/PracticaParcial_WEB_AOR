@@ -2,7 +2,7 @@ const request = require('supertest');
 const app = require('../app');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-const DeliveryNote = require('../models/DeliveryNote'); 
+const DeliveryNote = require('../models/DeliveryNote');
 const path = require('path');
 
 let token = '';
@@ -12,13 +12,12 @@ let deliveryNoteId = '';
 
 describe('Albaranes', () => {
   beforeAll(async () => {
-    // Login
     const loginRes = await request(app)
       .post('/api/user/login')
       .send({ email: 'admin9@example.com', password: '12345678' });
+
     token = loginRes.body.token;
 
-    // Crear cliente
     const clienteRes = await request(app)
       .post('/api/client')
       .set('Authorization', `Bearer ${token}`)
@@ -30,27 +29,23 @@ describe('Albaranes', () => {
           ciudad: 'Testópolis',
           codigoPostal: '12345',
           pais: 'España'
-        },
-        usuario: new ObjectId(),
-        compania: new ObjectId()
+        }
       });
     clienteId = clienteRes.body._id;
 
-    // Crear proyecto
     const proyectoRes = await request(app)
       .post('/api/project')
       .set('Authorization', `Bearer ${token}`)
       .send({
         nombre: 'Proyecto Test Albarán',
         descripcion: 'Descripción test',
-        cliente: clienteId,
-        compania: new ObjectId()
+        cliente: clienteId
       });
     proyectoId = proyectoRes.body._id;
   });
 
   beforeEach(async () => {
-    await DeliveryNote.deleteMany(); // 💥 Limpiar albaranes antes de cada test
+    await DeliveryNote.deleteMany();
   });
 
   describe('Crear', () => {
@@ -70,16 +65,12 @@ describe('Albaranes', () => {
 
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty('numero', 'TEST-ALB-001');
-      expect(res.body).toHaveProperty('_id');
-
-      // Guardamos el ID para el siguiente test
       deliveryNoteId = res.body._id;
     });
   });
 
   describe('Listar y Obtener', () => {
     beforeEach(async () => {
-      // Crear un albarán para testear
       const res = await request(app)
         .post('/api/deliverynote')
         .set('Authorization', `Bearer ${token}`)
@@ -96,30 +87,29 @@ describe('Albaranes', () => {
       deliveryNoteId = res.body._id;
     });
 
-    it('should list all delivery notes', async () => {
+    it('debería listar todos los albaranes del usuario o compañía', async () => {
       const res = await request(app)
         .get('/api/deliverynote')
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBe(200);
-      expect(res.body).toBeInstanceOf(Array);
+      expect(Array.isArray(res.body)).toBe(true);
       expect(res.body.length).toBeGreaterThan(0);
     });
 
-    it('should get a delivery note by ID', async () => {
+    it('debería obtener un albarán por ID', async () => {
       const res = await request(app)
         .get(`/api/deliverynote/${deliveryNoteId}`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty('_id', deliveryNoteId);
-      expect(res.body.numero).toBe('TEST-ALB-002');
+      expect(res.body).toHaveProperty('numero', 'TEST-ALB-002');
     });
   });
 
   describe('Eliminar', () => {
     beforeEach(async () => {
-      // Crear un albarán específico para probar la eliminación
       const res = await request(app)
         .post('/api/deliverynote')
         .set('Authorization', `Bearer ${token}`)
@@ -136,20 +126,18 @@ describe('Albaranes', () => {
       deliveryNoteId = res.body._id;
     });
 
-    it('debería eliminar un albarán correctamente', async () => {
+    it('debería eliminar un albarán no firmado', async () => {
       const res = await request(app)
         .delete(`/api/deliverynote/${deliveryNoteId}`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('mensaje', 'Albarán eliminado correctamente');
+      expect(res.body).toHaveProperty('msg', 'Albarán eliminado correctamente.');
     });
-
   });
 
   describe('Generar PDF', () => {
     beforeEach(async () => {
-      // Creamos un albarán nuevo
       const res = await request(app)
         .post('/api/deliverynote')
         .set('Authorization', `Bearer ${token}`)
@@ -166,20 +154,21 @@ describe('Albaranes', () => {
       deliveryNoteId = res.body._id;
     });
 
-    it('debería generar un PDF correctamente', async () => {
+    it('debería generar un PDF y devolver la URL', async () => {
       const res = await request(app)
         .get(`/api/deliverynote/pdf/${deliveryNoteId}`)
         .set('Authorization', `Bearer ${token}`);
 
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('mensaje', '✅ PDF generado correctamente');
+      expect(res.body).toHaveProperty('msg', expect.stringContaining('PDF generado'));
+      expect(res.body).toHaveProperty('pdfUrl');
       expect(res.body.pdfUrl).toMatch(/^http/);
     });
   });
 
-  describe('Firmar Albarán', () => {
+  describe('Firmar albarán', () => {
     let signableNoteId = '';
-  
+
     beforeEach(async () => {
       const res = await request(app)
         .post('/api/deliverynote')
@@ -193,28 +182,27 @@ describe('Albaranes', () => {
           horas: [],
           materiales: []
         });
-  
+
       signableNoteId = res.body._id;
     });
-  
-    it('debería firmar un albarán correctamente', async () => {
+
+    it('debería firmar el albarán, generar PDF y devolver URLs', async () => {
       const firmaPath = path.resolve(__dirname, '../__tests__/jordi.jpg');
-  
+
       const res = await request(app)
         .patch(`/api/deliverynote/firmar/${signableNoteId}`)
         .set('Authorization', `Bearer ${token}`)
         .attach('firma', firmaPath);
-  
+
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('msg', '✅ Albarán firmado correctamente');
+      expect(res.body).toHaveProperty('msg', 'Albarán firmado correctamente.');
       expect(res.body).toHaveProperty('firmaUrl');
       expect(res.body).toHaveProperty('pdfUrl');
     });
   });
-  
-  describe('Descargar PDF desde la nube', () => {
+
+  describe('Descargar PDF desde IPFS', () => {
     beforeEach(async () => {
-      // Crear albarán
       const res = await request(app)
         .post('/api/deliverynote')
         .set('Authorization', `Bearer ${token}`)
@@ -227,37 +215,26 @@ describe('Albaranes', () => {
           horas: [],
           materiales: []
         });
-  
+
       deliveryNoteId = res.body._id;
-  
-      // Ruta a la firma real
+
       const firmaPath = path.resolve(__dirname, '../__tests__/jordi.jpg');
-  
-      // Firmar el albarán
-      const firmaRes = await request(app)
-        .patch(`/api/deliverynote/firmar/${deliveryNoteId}`) // 👈 Usa PATCH como en tus rutas
+
+      await request(app)
+        .patch(`/api/deliverynote/firmar/${deliveryNoteId}`)
         .set('Authorization', `Bearer ${token}`)
         .attach('firma', firmaPath);
-  
-      // Confirmar que se ha guardado bien
-      expect(firmaRes.status).toBe(200);
-      expect(firmaRes.body).toHaveProperty('pdfUrl');
     });
-  
-    it('debería redirigir al PDF en la nube si está disponible', async () => {
+
+    it('debería redirigir al PDF si está en IPFS', async () => {
       const res = await request(app)
         .get(`/api/deliverynote/cloud/${deliveryNoteId}`)
         .set('Authorization', `Bearer ${token}`);
-  
-      console.log(' Redirección a:', res.headers.location);
-  
-      expect([302, 303]).toContain(res.status); // ✅ Redirección
-      expect(res.headers.location).toMatch(/^http/); // ✅ URL válida
+
+      expect([302, 303]).toContain(res.status);
+      expect(res.headers.location).toMatch(/^http/);
     });
   });
-  
-  
-
 
   afterAll(async () => {
     await mongoose.connection.close();

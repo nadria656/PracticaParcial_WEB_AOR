@@ -8,6 +8,7 @@ const path = require('path');
 const { uploadToIPFS } = require('../utils/ipfs');
 const { generatePdf } = require('../utils/pdfGenerator');
 
+
 // Crear un nuevo albarán
 const crearAlbaran = async (req, res) => {
   try {
@@ -111,7 +112,6 @@ const eliminarAlbaran = async (req, res) => {
   }
 };
 
-// Generar PDF de un albarán
 const generarPdfAlbaran = async (req, res) => {
   try {
     const { id } = req.params;
@@ -124,17 +124,20 @@ const generarPdfAlbaran = async (req, res) => {
     if (!albaran) return res.status(404).json({ msg: 'Albarán no encontrado.' });
 
     const esPropietario = albaran.usuario._id.toString() === req.user.id;
-    const esGuestMismaEmpresa = req.user.role === 'guest' &&
+    const esGuestMismaEmpresa =
+      req.user.role === 'guest' &&
       req.user.company?.toString() === albaran.usuario.company?.toString();
 
     if (!esPropietario && !esGuestMismaEmpresa) {
       return res.status(403).json({ msg: 'No tienes permiso para ver este albarán.' });
     }
 
+    // Si ya tiene PDF en IPFS, devuélvelo directamente
     if (albaran.pdfUrl) {
       return res.json({ msg: 'PDF ya generado.', pdfUrl: albaran.pdfUrl });
     }
 
+    // Generar PDF en local
     const fileName = `albaran_${albaran.numero}.pdf`;
     const pdfDir = path.join(__dirname, '../uploads/pdfs');
     if (!fs.existsSync(pdfDir)) fs.mkdirSync(pdfDir, { recursive: true });
@@ -144,6 +147,7 @@ const generarPdfAlbaran = async (req, res) => {
     const stream = fs.createWriteStream(pdfPath);
     doc.pipe(stream);
 
+    // Contenido del PDF
     doc.fontSize(20).text('Albarán', { align: 'center' });
     doc.moveDown();
     doc.fontSize(12).text(`Número: ${albaran.numero}`);
@@ -174,12 +178,9 @@ const generarPdfAlbaran = async (req, res) => {
     doc.moveDown();
     doc.fontSize(12).text(`Estado: ${albaran.firmado ? 'FIRMADO' : 'NO FIRMADO'}`);
 
+    // Firma
     if (albaran.firmado && albaran.firmaUrl) {
-      const firmaPath = path.join(__dirname, '../uploads/firmas', path.basename(albaran.firmaUrl));
-      if (fs.existsSync(firmaPath)) {
-        doc.moveDown().text('Firma digital:');
-        doc.image(firmaPath, { width: 100 });
-      }
+      doc.moveDown().text('Firma digital: (ver en IPFS)');
     }
 
     doc.end();
@@ -189,14 +190,14 @@ const generarPdfAlbaran = async (req, res) => {
       stream.on('error', reject);
     });
 
-    const pdfUrl = `${req.protocol}://${req.get('host')}/uploads/pdfs/${fileName}`;
+    // Subir a IPFS
+    const pdfIpfsUrl = await uploadToIPFS(pdfPath);
 
-    if (albaran.firmado && !albaran.pdfUrl) {
-      albaran.pdfUrl = pdfUrl;
-      await albaran.save();
-    }
+    // Guardar en el albarán
+    albaran.pdfUrl = pdfIpfsUrl;
+    await albaran.save();
 
-    res.json({ msg: 'PDF generado correctamente.', pdfUrl });
+    res.json({ msg: 'PDF generado correctamente y subido a IPFS.', pdfUrl: pdfIpfsUrl });
 
   } catch (error) {
     console.error('[generarPdfAlbaran] Error al generar PDF:', error);
@@ -219,20 +220,32 @@ const firmarAlbaran = async (req, res) => {
     if (!req.file) return res.status(400).json({ msg: 'No se ha subido ninguna firma.' });
 
     const firmaFile = req.file.filename;
-    const firmaUrl = `${req.protocol}://${req.get('host')}/uploads/firmas/${firmaFile}`;
+    const firmaPath = path.join(__dirname, '../uploads/firmas', firmaFile);
+
+
+    const firmaIpfsUrl = await uploadToIPFS(firmaPath);
+
 
     albaran.firmado = true;
-    albaran.firmaUrl = firmaUrl;
+    albaran.firmaUrl = firmaIpfsUrl;
     albaran.fechaFirma = new Date();
 
-    const pdfPath = await generatePdf(albaran);
-    const pdfUrl = `${req.protocol}://${req.get('host')}/uploads/pdfs/${path.basename(pdfPath)}`;
+    // 📄 Generar PDF firmado
+    const pdfPath = await generatePdf(albaran); // PDF se genera y se guarda en disco
 
-    albaran.pdfUrl = pdfUrl;
+    // 🔼 Subir PDF a IPFS
+    const pdfIpfsUrl = await uploadToIPFS(pdfPath);
+
+    // Guardar url del PDF
+    albaran.pdfUrl = pdfIpfsUrl;
 
     await albaran.save();
 
-    res.json({ msg: 'Albarán firmado correctamente.', firmaUrl, pdfUrl });
+    res.json({
+      msg: 'Albarán firmado correctamente.',
+      firmaUrl: firmaIpfsUrl,
+      pdfUrl: pdfIpfsUrl
+    });
 
   } catch (error) {
     console.error('[firmarAlbaran] Error al firmar albarán:', error);
@@ -240,25 +253,35 @@ const firmarAlbaran = async (req, res) => {
   }
 };
 
-// Descargar PDF desde cloud
 const descargarPdfDesdeCloud = async (req, res) => {
   try {
     const { id } = req.params;
     const albaran = await DeliveryNote.findById(id);
 
-    if (!albaran) return res.status(404).json({ msg: 'Albarán no encontrado.' });
+    if (!albaran) return res.status(404).json({ msg: 'Albarán no encontrado' });
+
+    // Validación de acceso
+    const esPropietario = albaran.usuario.toString() === req.user.id;
+    const esGuestMismaEmpresa =
+      req.user.role === 'guest' &&
+      req.user.company?.toString() === albaran.usuario.company?.toString();
+
+    if (!esPropietario && !esGuestMismaEmpresa) {
+      return res.status(403).json({ msg: 'No tienes permiso para descargar este albarán' });
+    }
 
     if (albaran.pdfUrl) {
       return res.redirect(albaran.pdfUrl);
     }
 
-    res.status(404).json({ msg: 'PDF no disponible en la nube.' });
+    return res.status(404).json({ msg: 'PDF no disponible en la nube (IPFS)' });
 
   } catch (error) {
-    console.error('[descargarPdfDesdeCloud] Error al descargar PDF:', error);
-    res.status(500).json({ msg: 'Error interno al descargar PDF.', error });
+    console.error('[descargarPdfDesdeCloud] Error:', error);
+    res.status(500).json({ msg: 'Error al descargar el PDF desde la nube', error });
   }
 };
+
 
 module.exports = {
   crearAlbaran,

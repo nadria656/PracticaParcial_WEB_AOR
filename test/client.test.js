@@ -1,13 +1,11 @@
-
 const request = require('supertest');
 const app = require('../app');
 const Cliente = require('../models/Cliente');
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
 
 describe('Clientes', () => {
-  let token = "";
-  let clienteId = "";
+  let token = '';
+  let clienteId = '';
 
   beforeAll(async () => {
     await Cliente.deleteMany({});
@@ -15,10 +13,11 @@ describe('Clientes', () => {
     const loginRes = await request(app)
       .post('/api/user/login')
       .send({ email: 'admin9@example.com', password: '12345678' });
+
     token = loginRes.body.token;
   });
 
-  it('should create a client', async () => {
+  it('debería crear un cliente nuevo o detectar duplicado', async () => {
     const res = await request(app)
       .post('/api/client')
       .set('Authorization', `Bearer ${token}`)
@@ -30,72 +29,75 @@ describe('Clientes', () => {
           ciudad: 'Triana',
           codigoPostal: '41010',
           pais: 'España'
-        },
-        usuario: new ObjectId(),
-        compania: new ObjectId()
+        }
       });
-  
-    console.log('Crear cliente →', res.status, res.body);
-  
+
     expect([201, 409]).toContain(res.status);
-  
+
     if (res.status === 201) {
       expect(res.body).toHaveProperty('nombre', 'Ferretería El Gitano');
       clienteId = res.body._id;
     } else {
-      // Si es 409, buscamos el ID del cliente existente para continuar los tests
-      const listado = await request(app)
+      // Si ya existe, buscarlo para continuar el resto de tests
+      const lista = await request(app)
         .get('/api/client')
         .set('Authorization', `Bearer ${token}`);
-      clienteId = listado.body.find(c => c.cif === 'B12345678')._id;
+      const encontrado = lista.body.find(c => c.cif === 'B12345678');
+      expect(encontrado).toBeDefined();
+      clienteId = encontrado._id;
     }
   });
 
-  it('should list all clients', async () => {
+  it('debería listar todos los clientes del usuario o compañía', async () => {
     const res = await request(app)
       .get('/api/client')
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body).toBeInstanceOf(Array);
+    expect(Array.isArray(res.body)).toBe(true);
     expect(res.body[0]).toHaveProperty('nombre');
   });
 
-  it('should get a client by ID', async () => {
+  it('debería obtener un cliente por ID', async () => {
     const res = await request(app)
       .get(`/api/client/${clienteId}`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty('_id', clienteId.toString());
+    expect(res.body).toHaveProperty('nombre');
   });
 
-  it('should archive a client (soft delete)', async () => {
+  it('debería archivar (soft delete) un cliente', async () => {
     const res = await request(app)
       .patch(`/api/client/archive/${clienteId}`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.mensaje).toBe('Cliente archivado correctamente');
-    expect(res.body.cliente.archivado).toBe(true);
+    expect(res.body).toHaveProperty('msg', 'Cliente archivado correctamente.');
+    expect(res.body.cliente).toHaveProperty('archivado', true);
   });
 
-  it('should recover an archived client (soft delete)', async () => {
+  it('debería recuperar un cliente archivado', async () => {
     const res = await request(app)
       .patch(`/api/client/recover/${clienteId}`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.mensaje).toBe('Cliente recuperado correctamente');
-    expect(res.body.cliente.archivado).toBe(false);
+    expect(res.body).toHaveProperty('msg', 'Cliente recuperado correctamente.');
+    expect(res.body.cliente).toHaveProperty('archivado', false);
   });
 
-  it('should delete a client (hard delete)', async () => {
+  it('debería eliminar un cliente definitivamente (hard delete)', async () => {
     const res = await request(app)
       .delete(`/api/client/${clienteId}?soft=false`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.mensaje).toBe('Cliente eliminado definitivamente (hard delete)');
+    expect(res.body).toHaveProperty('msg', 'Cliente eliminado definitivamente (hard delete).');
+  });
+
+  afterAll(async () => {
+    await mongoose.connection.close();
   });
 });

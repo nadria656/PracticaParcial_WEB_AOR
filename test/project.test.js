@@ -1,4 +1,3 @@
-
 const request = require('supertest');
 const app = require('../app');
 const mongoose = require('mongoose');
@@ -26,25 +25,20 @@ describe('Proyectos', () => {
           ciudad: 'Triana',
           codigoPostal: '41010',
           pais: 'España'
-        },
-        usuario: new ObjectId(),
-        compania: new ObjectId()
+        }
       });
 
     clienteId = clienteRes.body._id;
   });
 
-  it('should create a project', async () => {
-    const companiaId = new ObjectId();
-
+  it('debería crear un proyecto', async () => {
     const res = await request(app)
       .post('/api/project')
       .set('Authorization', `Bearer ${token}`)
       .send({
         nombre: 'Proyecto Gitano',
         descripcion: 'Proyecto para crear un simulador de gitano',
-        cliente: clienteId,
-        compania: companiaId
+        cliente: clienteId
       });
 
     expect(res.status).toBe(201);
@@ -53,7 +47,7 @@ describe('Proyectos', () => {
     proyectoId = res.body._id;
   });
 
-  it('should update a project', async () => {
+  it('debería actualizar un proyecto', async () => {
     const res = await request(app)
       .put(`/api/project/${proyectoId}`)
       .set('Authorization', `Bearer ${token}`)
@@ -65,17 +59,17 @@ describe('Proyectos', () => {
     expect(res.body).toHaveProperty('descripcion', 'Proyecto actualizado para crear un simulador mejorado');
   });
 
-  it('should list all projects', async () => {
+  it('debería listar todos los proyectos no eliminados', async () => {
     const res = await request(app)
       .get('/api/project')
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body).toBeInstanceOf(Array);
+    expect(Array.isArray(res.body)).toBe(true);
     expect(res.body[0]).toHaveProperty('nombre');
   });
 
-  it('should get a project by ID', async () => {
+  it('debería obtener un proyecto por ID', async () => {
     const res = await request(app)
       .get(`/api/project/${proyectoId}`)
       .set('Authorization', `Bearer ${token}`);
@@ -84,27 +78,28 @@ describe('Proyectos', () => {
     expect(res.body).toHaveProperty('_id', proyectoId.toString());
   });
 
-  it('should archive a project (soft delete)', async () => {
+  it('debería archivar un proyecto (soft delete)', async () => {
     const res = await request(app)
       .delete(`/api/project/${proyectoId}?soft=true`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.mensaje).toBe('Proyecto archivado correctamente');
-    expect(res.body.proyecto.archivado).toBe(true);
+    expect(res.body).toHaveProperty('msg', 'Proyecto archivado correctamente.');
+    expect(res.body.proyecto).toHaveProperty('archivado', true);
   });
 
-  it('should list all archived projects', async () => {
+  it('debería listar proyectos archivados', async () => {
     const res = await request(app)
       .get('/api/project/archived')
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body).toBeInstanceOf(Array);
-    expect(res.body[0]).toHaveProperty('nombre');
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body[0]).toHaveProperty('archivado', true);
   });
 
-  it('should recover an archived project (soft delete)', async () => {
+  it('debería recuperar un proyecto archivado', async () => {
+    // Primero aseguramos que esté archivado
     await request(app)
       .delete(`/api/project/${proyectoId}?soft=true`)
       .set('Authorization', `Bearer ${token}`);
@@ -114,16 +109,20 @@ describe('Proyectos', () => {
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.mensaje).toBe('Proyecto recuperado correctamente');
-    expect(res.body.proyecto.archivado).toBe(false);
+    expect(res.body).toHaveProperty('msg', 'Proyecto recuperado correctamente.');
+    expect(res.body.proyecto).toHaveProperty('archivado', false);
   });
 
-  it('should delete a project (hard delete)', async () => {
+  it('debería eliminar un proyecto definitivamente (hard delete)', async () => {
     const res = await request(app)
       .delete(`/api/project/${proyectoId}?soft=false`)
       .set('Authorization', `Bearer ${token}`);
 
     expect(res.status).toBe(200);
-    expect(res.body.mensaje).toBe('Proyecto eliminado definitivamente (hard delete)');
+    expect(res.body).toHaveProperty('msg', 'Proyecto eliminado definitivamente (hard delete).');
+  });
+
+  afterAll(async () => {
+    await mongoose.connection.close();
   });
 });
