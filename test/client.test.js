@@ -92,13 +92,13 @@ describe('Clientes', () => {
 
   it('debería archivar (soft delete) un cliente', async () => {
     const res = await request(app)
-      .patch(`/api/client/archive/${clienteId}`)
+      .delete(`/api/client/${clienteId}?soft=true`)
       .set('Authorization', `Bearer ${token}`);
-
+  
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('msg', 'Cliente archivado correctamente.');
-    expect(res.body.cliente).toHaveProperty('archivado', true);
+    expect(res.body).toHaveProperty('msg', 'Cliente archivado correctamente (soft delete).');
   });
+  
 
   it('debería listar clientes archivados', async () => {
     // Primero archivamos

@@ -110,34 +110,7 @@ const obtenerClientePorId = async (req, res, next) => {
   }
 };
 
-// Archivar un cliente (soft delete)
-const archivarCliente = async (req, res, next) => {
-  try {
-    const clienteId = req.params.id;
-    const usuarioId = req.user.id;
-    const companiaId = req.user.company || null;
 
-    const cliente = await Cliente.findOneAndUpdate(
-      {
-        _id: clienteId,
-        eliminado: false,
-        $or: [{ usuario: usuarioId }, { compania: companiaId }]
-      },
-      { archivado: true },
-      { new: true }
-    );
-
-    if (!cliente) {
-      return res.status(404).json({ msg: 'Cliente no encontrado o sin permiso para archivarlo.' });
-    }
-
-    res.json({ msg: 'Cliente archivado correctamente.', cliente });
-
-  } catch (error) {
-    console.error('[archivarCliente] Error al archivar cliente:', error);
-    res.status(500).json({ msg: 'Error interno al archivar cliente.', error });
-  }
-};
 
 // Eliminar un cliente (soft o hard delete)
 const eliminarCliente = async (req, res, next) => {
@@ -228,7 +201,6 @@ module.exports = {
   actualizarCliente,
   obtenerClientes,
   obtenerClientePorId,
-  archivarCliente,
   eliminarCliente,
   recuperarCliente,
   listarClientesArchivados,

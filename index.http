@@ -166,21 +166,17 @@ GET http://localhost:3000/api/client/6810fbe6d1dfc9185c5ae0bd
 Authorization: Bearer {{TOKEN}}
 
 
-### Archivar cliente
-PATCH http://localhost:3000/api/client/archive/6816552dd8b78c968b4f5855
-Authorization: Bearer {{TOKEN}}
-
 ### Eliminar Cliente (soft)
-DELETE http://localhost:3000/api/client/67f7b6ae066ff839ebbc3313
+DELETE http://localhost:3000/api/client/6816575b11b96deab893653f
 Authorization: Bearer {{TOKEN}}
 
 ### Eliminar cliente (hard)
-DELETE http://localhost:3000/api/client/681106f8ca995811e9c9d6da?soft=false
+DELETE http://localhost:3000/api/client/6816575b11b96deab893653f?soft=false
 Authorization: Bearer {{TOKEN}}
 
 
 ### Recuperar cliente archivado
-PATCH http://localhost:3000/api/client/recover/6816552dd8b78c968b4f5855
+PATCH http://localhost:3000/api/client/recover/6816575b11b96deab893653f
 Authorization: Bearer {{TOKEN}}
 
 ### Obtener clientes archivados

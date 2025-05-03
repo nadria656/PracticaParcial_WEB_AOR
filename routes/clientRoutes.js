@@ -7,7 +7,6 @@ const {
   obtenerClientes,
   obtenerClientePorId,
   actualizarCliente, 
-  archivarCliente,
   eliminarCliente,
   recuperarCliente,
   listarClientesArchivados
@@ -116,26 +115,6 @@ router.get('/:id', validarJWT, obtenerClientePorId);
  */
 router.put('/:id', validarJWT, validarCliente, actualizarCliente);
 
-/**
- * @swagger
- * /client/archive/{id}:
- *   patch:
- *     summary: Archivar un cliente (soft delete)
- *     tags: [Clientes]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: ID del cliente a archivar
- *     responses:
- *       200:
- *         description: Cliente archivado correctamente
- */
-router.patch('/archive/:id', validarJWT, archivarCliente);
 
 /**
  * @swagger
