@@ -167,7 +167,7 @@ Authorization: Bearer {{TOKEN}}
 
 
 ### Archivar cliente
-PATCH http://localhost:3000/api/client/archive/67f7b6ae066ff839ebbc3313
+PATCH http://localhost:3000/api/client/archive/6816552dd8b78c968b4f5855
 Authorization: Bearer {{TOKEN}}
 
 ### Eliminar Cliente (soft)
@@ -180,9 +180,12 @@ Authorization: Bearer {{TOKEN}}
 
 
 ### Recuperar cliente archivado
-PATCH http://localhost:3000/api/client/recover/67f7b6ae066ff839ebbc3313
+PATCH http://localhost:3000/api/client/recover/6816552dd8b78c968b4f5855
 Authorization: Bearer {{TOKEN}}
 
+### Obtener clientes archivados
+GET http://localhost:3000/api/client/archived
+Authorization: Bearer {{TOKEN}}
 
 ### Crear Proyecto
 POST http://localhost:3000/api/project

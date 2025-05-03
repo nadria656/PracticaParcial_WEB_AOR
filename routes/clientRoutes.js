@@ -6,12 +6,27 @@ const validarJWT = require('../middleware/auth');
 const {
   obtenerClientes,
   obtenerClientePorId,
-  actualizarCliente, // ✅ añadido aquí
+  actualizarCliente, 
   archivarCliente,
   eliminarCliente,
-  recuperarCliente
+  recuperarCliente,
+  listarClientesArchivados
 } = require('../controllers/clientController');
 
+
+/**
+ * @swagger
+ * /client/archived:
+ *   get:
+ *     summary: Listar clientes archivados
+ *     tags: [Clientes]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Lista de clientes archivados
+ */
+router.get('/archived', validarJWT, listarClientesArchivados);
 /**
  * @swagger
  * tags:
@@ -163,5 +178,7 @@ router.delete('/:id', validarJWT, eliminarCliente);
  *         description: Cliente recuperado correctamente
  */
 router.patch('/recover/:id', validarJWT, recuperarCliente);
+
+
 
 module.exports = router;

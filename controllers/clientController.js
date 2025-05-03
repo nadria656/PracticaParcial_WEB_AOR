@@ -203,6 +203,26 @@ const recuperarCliente = async (req, res, next) => {
   }
 };
 
+// Listar clientes archivados
+const listarClientesArchivados = async (req, res, next) => {
+  try {
+    const usuarioId = req.user.id;
+    const companiaId = req.user.company || null;
+
+    const clientesArchivados = await Cliente.find({
+      archivado: true,
+      eliminado: false,
+      $or: [{ usuario: usuarioId }, { compania: companiaId }]
+    });
+
+    res.json(clientesArchivados);
+  } catch (error) {
+    console.error('[listarClientesArchivados] Error al listar clientes archivados:', error);
+    res.status(500).json({ msg: 'Error interno al listar clientes archivados.', error });
+  }
+};
+
+
 module.exports = {
   crearCliente,
   actualizarCliente,
@@ -211,4 +231,5 @@ module.exports = {
   archivarCliente,
   eliminarCliente,
   recuperarCliente,
+  listarClientesArchivados,
 };

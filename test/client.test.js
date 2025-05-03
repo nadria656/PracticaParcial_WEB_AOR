@@ -100,6 +100,21 @@ describe('Clientes', () => {
     expect(res.body.cliente).toHaveProperty('archivado', true);
   });
 
+  it('debería listar clientes archivados', async () => {
+    // Primero archivamos
+    await request(app)
+      .patch(`/api/client/archive/${clienteId}`)
+      .set('Authorization', `Bearer ${token}`);
+
+    const res = await request(app)
+      .get('/api/client/archived')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body)).toBe(true);
+    expect(res.body.some(c => c._id === clienteId)).toBe(true);
+  });
+
   it('debería recuperar un cliente archivado', async () => {
     const res = await request(app)
       .patch(`/api/client/recover/${clienteId}`)
