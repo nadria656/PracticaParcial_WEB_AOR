@@ -68,6 +68,28 @@ describe('Clientes', () => {
     expect(res.body).toHaveProperty('nombre');
   });
 
+  it('debería actualizar los datos del cliente', async () => {
+    const res = await request(app)
+      .put(`/api/client/${clienteId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        nombre: 'Ferretería El Gitano Actualizada',
+        cif: 'B99999999',
+        direccion: {
+          calle: 'Calle Nueva 123',
+          ciudad: 'Sevilla',
+          codigoPostal: '41001',
+          pais: 'España'
+        }
+      });
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty('msg', 'Cliente actualizado correctamente.');
+    expect(res.body.cliente).toHaveProperty('nombre', 'Ferretería El Gitano Actualizada');
+    expect(res.body.cliente.direccion).toHaveProperty('ciudad', 'Sevilla');
+  });
+
+
   it('debería archivar (soft delete) un cliente', async () => {
     const res = await request(app)
       .patch(`/api/client/archive/${clienteId}`)

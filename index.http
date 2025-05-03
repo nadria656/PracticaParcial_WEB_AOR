@@ -1,4 +1,4 @@
-@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTEwM2JkY2I4YTc4OGZhZjZlODU0YSIsImVtYWlsIjoiZ2lnYW1heHJheXF1YXphQGdtYWlsLmNvbSIsImlhdCI6MTc0NjExNTQ1MSwiZXhwIjoxNzQ2MTIyNjUxfQ.bTW2Dz8WnOONZ3VG2pNA-0zCQDvuApCEhnW33y7Qnig
+@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTEwM2JkY2I4YTc4OGZhZjZlODU0YSIsImVtYWlsIjoiZ2lnYW1heHJheXF1YXphQGdtYWlsLmNvbSIsImlhdCI6MTc0NjI5MzU5MCwiZXhwIjoxNzQ2MzAwNzkwfQ.PVFQMVqGJCd26EfKqkCQrzvHopYbq-oG4yzMkb7dmi0
 
 
 ### Registro de usuario
@@ -139,6 +139,23 @@ Authorization: Bearer {{TOKEN}}
     "pais": "España"
   }
 }
+
+### Actualizar cliente existente
+PUT http://localhost:3000/api/client/6816536b88092e6511e653da
+Authorization: Bearer {{TOKEN}}
+Content-Type: application/json
+
+{
+  "nombre": "Ferretería El Gitano Actualizada",
+  "cif": "B99999999",
+  "direccion": {
+    "calle": "Calle Nueva 123",
+    "ciudad": "Sevilla",
+    "codigoPostal": "41001",
+    "pais": "España"
+  }
+}
+
 
 
 ### Listar clientes

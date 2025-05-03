@@ -33,6 +33,39 @@ const crearCliente = async (req, res, next) => {
   }
 };
 
+// Actualizar un cliente existente
+const actualizarCliente = async (req, res, next) => {
+  try {
+    const clienteId = req.params.id;
+    const usuarioId = req.user.id;
+    const companiaId = req.user.company || null;
+    const { nombre, cif, direccion } = req.body;
+
+    const cliente = await Cliente.findOne({
+      _id: clienteId,
+      eliminado: false,
+      $or: [{ usuario: usuarioId }, { compania: companiaId }]
+    });
+
+    if (!cliente) {
+      return res.status(404).json({ msg: 'Cliente no encontrado o sin permisos para modificarlo.' });
+    }
+
+    if (nombre !== undefined) cliente.nombre = nombre;
+    if (cif !== undefined) cliente.cif = cif;
+    if (direccion !== undefined) cliente.direccion = direccion;
+
+    const actualizado = await cliente.save();
+
+    res.json({ msg: 'Cliente actualizado correctamente.', cliente: actualizado });
+
+  } catch (error) {
+    console.error('[actualizarCliente] Error al actualizar cliente:', error);
+    res.status(500).json({ msg: 'Error interno al actualizar cliente.', error });
+  }
+};
+
+
 // Obtener todos los clientes del usuario o su compañía
 const obtenerClientes = async (req, res, next) => {
   try {
@@ -172,6 +205,7 @@ const recuperarCliente = async (req, res, next) => {
 
 module.exports = {
   crearCliente,
+  actualizarCliente,
   obtenerClientes,
   obtenerClientePorId,
   archivarCliente,

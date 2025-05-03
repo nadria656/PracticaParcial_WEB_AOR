@@ -6,6 +6,7 @@ const validarJWT = require('../middleware/auth');
 const {
   obtenerClientes,
   obtenerClientePorId,
+  actualizarCliente, // ✅ añadido aquí
   archivarCliente,
   eliminarCliente,
   recuperarCliente
@@ -72,6 +73,33 @@ router.get('/', validarJWT, obtenerClientes);
  *         description: Cliente encontrado
  */
 router.get('/:id', validarJWT, obtenerClientePorId);
+
+/**
+ * @swagger
+ * /client/{id}:
+ *   put:
+ *     summary: Actualizar un cliente existente
+ *     tags: [Clientes]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: ID del cliente a actualizar
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/ClientData'
+ *     responses:
+ *       200:
+ *         description: Cliente actualizado correctamente
+ */
+router.put('/:id', validarJWT, validarCliente, actualizarCliente);
 
 /**
  * @swagger
