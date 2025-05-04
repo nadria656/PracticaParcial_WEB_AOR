@@ -35,7 +35,7 @@ const generatePdf = async (albaran) => {
 
   doc.moveDown().text(`Estado: ${albaran.firmado ? 'FIRMADO' : 'NO FIRMADO'}`);
 
-  // 💥 Añadir firma si existe
+
   if (albaran.firmaUrl) {
     try {
       const imgPath = path.join(__dirname, '../uploads/firmas', path.basename(albaran.firmaUrl));

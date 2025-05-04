@@ -1,4 +1,4 @@
-@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTEwM2JkY2I4YTc4OGZhZjZlODU0YSIsImVtYWlsIjoiZ2lnYW1heHJheXF1YXphQGdtYWlsLmNvbSIsImlhdCI6MTc0NjI5MzU5MCwiZXhwIjoxNzQ2MzAwNzkwfQ.PVFQMVqGJCd26EfKqkCQrzvHopYbq-oG4yzMkb7dmi0
+@TOKEN = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MTEwM2JkY2I4YTc4OGZhZjZlODU0YSIsImVtYWlsIjoiZ2lnYW1heHJheXF1YXphQGdtYWlsLmNvbSIsImlhdCI6MTc0NjM1MTg2NiwiZXhwIjoxNzQ2MzU5MDY2fQ.DfouEi-PPYo4kxQisSqKF0DFCdmUuGMgZXgSa3grV-Y
 
 
 ### Registro de usuario
@@ -192,12 +192,12 @@ Content-Type: application/json
 {
   "nombre": "Proyecto Gitano",
   "descripcion": "Proyecto para crear un simulador de gitano",
-  "cliente": "6813a4df007b044b21cf2cdd" 
+  "cliente": "6817369bb23037acdf225c1b" 
 }
 
 
 ### Actualizar Proyecto
-PUT http://localhost:3000/api/project/67ffc960c52cdb2f29d0361b  
+PUT http://localhost:3000/api/project/680151138ae7af6ff6fe8708
 Authorization: Bearer {{TOKEN}}
 Content-Type: application/json
 
@@ -249,9 +249,9 @@ Content-Type: application/json
 {
   "numero": "adios3",
   "fecha": "2025-04-16",
-  "cliente": "6813a4df007b044b21cf2cdd",  
+  "cliente": "6817369bb23037acdf225c1b",  
   "total": 700,
-  "proyecto": "680151138ae7af6ff6fe8708",  
+  "proyecto": "6817371dfcd854e091e1787a",  
   "horas": [
     {
       "persona": "67f7b6ae066ff839ebbc3314",  
@@ -278,12 +278,12 @@ DELETE http://localhost:3000/api/deliverynote/68110b19c04556d6ddb84cd5
 Authorization: Bearer {{TOKEN}}
 
 ### Descargar albarán en PDF
-GET http://localhost:3000/api/deliverynote/pdf/6813a533d12684ff06885e7d
+GET http://localhost:3000/api/deliverynote/pdf/6817378cfcd854e091e17883
 Authorization: Bearer {{TOKEN}}
 
 
 ### Firmar albarán (subiendo archivo con form-data)
-PATCH http://localhost:3000/api/deliverynote/firmar/6813a533d12684ff06885e7d
+PATCH http://localhost:3000/api/deliverynote/firmar/6817378cfcd854e091e17883
 Authorization: Bearer {{TOKEN}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -297,5 +297,5 @@ Content-Type: image/jpeg
 
 
 ### Descargar PDF desde la nube (redirige)
-GET http://localhost:3000/api/deliverynote/cloud/6813a533d12684ff06885e7d
+GET http://localhost:3000/api/deliverynote/cloud/6817378cfcd854e091e17883
 Authorization: Bearer {{TOKEN}}

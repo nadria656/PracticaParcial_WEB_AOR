@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const validarJWT = require('../middleware/auth');
+const { validarProyecto } = require('../validators/projectValidator');
 
 const {
   crearProyecto,
@@ -50,7 +51,7 @@ router.get('/archived', validarJWT, listarProyectosArchivados);
  *       201:
  *         description: Proyecto creado correctamente
  */
-router.post('/', validarJWT, crearProyecto);
+router.post('/', validarJWT, validarProyecto, crearProyecto);
 
 /**
  * @swagger

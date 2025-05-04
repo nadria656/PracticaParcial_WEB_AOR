@@ -8,6 +8,7 @@ const {
   firmarAlbaran,
   descargarPdfDesdeCloud 
 } = require('../controllers/deliveryNoteController');
+const { validarAlbaran } = require('../validators/deliveryNoteValidator');
 
 const validarJWT = require('../middleware/auth');
 const uploadFirma = require('../middleware/uploadFirma');
@@ -39,7 +40,7 @@ const router = express.Router();
  *       201:
  *         description: Albarán creado correctamente
  */
-router.post('/', validarJWT, crearAlbaran);
+router.post('/', validarJWT, validarAlbaran, crearAlbaran);
 
 /**
  * @swagger
